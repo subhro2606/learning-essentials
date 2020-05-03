@@ -1,0 +1,45 @@
+#This command prints the environment variable
+env 
+
+#Takes make 
+cd -to the last working dir
+
+#Take to home
+cd ~
+cd
+
+
+Boot Loader
+Display Renderer
+Display Manager
+Desktop Environment
+Program Manager
+Programs
+	
+	
+#Package Manager
+	Debian, Ubuntu -> apt
+	RHEL, Fedora, Centos, Redhat -> yum, dnf
+	Open SUSE -> Zypper
+	ArchLinux -> Pacman
+	Gentoo -> Portage(emerge)
+	Cler Linux -swupd
+	Slackware -slackpkg
+					sudo dnf upgrade -> upgrades all programs
+					sudo yum upgrade -> upgrades all programs
+
+#Installing in containerized way
+Flatpak -> Very Universal, Centralized Repositry, Easiest
+Snaps -> Ubuntu's version of flatpacks
+App Images -> You download the image, put it in a folder & run once command. But once installed with per configured dependency versions, it can't be upgraded(stuck in time).
+
+#Go to the web site, download the pakage & install it
+	Debian, Ubuntu -> rpm packages
+		sudo dpkg -i <packagename of the file downloaded.deb>
+	RHEL, Fedora, Centos, Redhat -> deb packages 
+		sudo rpm -ivh <packagename of the file downloaded.rpm>
+
+		
+		
+#Build it from Source
+

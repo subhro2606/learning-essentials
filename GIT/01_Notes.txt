@@ -1,0 +1,58 @@
+#Update Git for Windows 
+git update-git-for-windows
+
+#Initialize a folder as a git repository
+git init
+
+#Set up the user name and password
+git config --global user.name 'Subhrajit Sadhukhan'
+git config --global user.email 'subhro26062gmail.com'
+
+#Adds a file to the staging area
+git add index.html
+
+#Removes a file from the staging area
+git rm --cached index.html
+
+#Adds all files in the current folder to the staging area
+git add .
+
+#Removes all files/folders in the current staging area
+git rm -r --cached .
+
+#Add files from the staging area to the respository
+git commit
+
+#Add files from the staging area to the respository. This would add the comment without opening VIM
+git commit -m 'Changed app.js'
+
+#.gitignore whatever files, folders are to ignored for adding into the staging area or repo needs to be specified here
+touch .gitignore
+
+#Creates a new branch "login"
+git branch login
+
+#Switches to branch "login"
+git checkout login
+
+#Switches to branch "master"
+git checkout master
+
+#Merges branch "login" with the current branch you are in (-m option for commit message)
+git merge login
+git merge login -m "Commit Message"
+
+#Lists the remote repositories
+git remote
+
+#Adds a remote respository to repository nam as "origin"
+git remote add origin https://github.com/subhro2606/myappsample.git
+
+#Pushes all the details from "master" to the "origin" repository
+git push -u origin master
+
+#Clone from a repository
+git clone https://github.com/subhro2606/myappsample.git
+
+#Pulls all the recent changes from a repository
+git pull

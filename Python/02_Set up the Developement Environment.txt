@@ -1,0 +1,80 @@
+In this lesson, we're going to set up VS Code to allow us to do remote development. By the time we're finished, we should have VS Code configured to allow us to utilize Cloud Playgrounds as our development environment, while still being able to use nice development tools on our workstations.
+
+Documentation For This Video
+VS Code
+VS Code - Python Extension
+VS Code - Remote Development Extension
+VS Code - Pyright Extension
+Installing VS Code
+VS Code is probably the most popular text editor used by programmers today, and thankfully it's installable on all major operating systems. To follow along with this lesson, we need to have VS Code installed on our workstation.
+
+Installing Helpful Python Extensions
+One of the best features of VS Code is the vast number of high-quality extensions we can install and customize to make our development environment our own. For the purposes of working with Python, we're going to install a few different Python specific extensions.
+
+Python - This is the official extension maintained by Microsoft that adds a lot of Python functionality. With this extension, we can have automated linting, run our tests, debug Python code, run Python files, or even run a line of Python directly in a REPL. All this can be done from within the editor.
+Pyright - This extension adds support to VS Code to handle the type hints we can add to our Python code (using Python >= 3.5) and tell us if we're using functions or classes with improper types.
+There are other extensions we could add for working with other Python-related projects like Django, but for now, this is enough to have a very powerful Python IDE.
+
+Setting Up Remote Development
+If we're going to be working on Python projects on a development server, then the Remote Development Extension is fantastic. We've set up our Python development Cloud Server, and we can configure a host for the server to make it easy to connect to from within VS Code. A few things that are necessary in order to follow along:
+
+Connect to a remote host using SSH.
+Generate SSH Keys (ssh-keygen).
+Copy SSH Keys (e.g. ssh-copy-id).
+Let's start by creating an SSH key that we'll use for connecting to our remote SSH servers. This way, we don't use keys that have access to other servers. All of these commands need to be run from our workstation.
+
+
+
+$ ssh-keygen -t rsa -b 4096 -C "subhro2606@gmail.com" -f /home/cloud_user/.ssh/id_rsa-remote-ssh
+
+
+ssh-keygen -t rsa -b 4096 -C "subhro2606@gmail.com" -f /home/cloud_user/.ssh/id_rsa-remote-ssh
+Generating public/private rsa key pair.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/cloud_user/.ssh/id_rsa-remote-ssh.
+Your public key has been saved in /home/cloud_user/.ssh/id_rsa-remote-ssh.pub.
+The key fingerprint is:
+SHA256:+p7mJEcYUdehdO2p0fBfHu+n98ID8tcEdBIyqBf2TDo subhro2606@gmail.com
+The key's randomart image is:
++---[RSA 4096]----+
+|      ... oo=o.. |
+|       . o+o+o+ .|
+|      .  o.* * + |
+|       o. E + *..|
+|      . S. . o ++|
+|       o  . o   =|
+|      o o  o o + |
+|       =..  . = =|
+|       +=    ..=+|
++----[SHA256]-----+
+
+
+Next, we'll use ssh-copy-id to copy the SSH public key to our Cloud Playground.
+$ ssh-copy-id -i ~/.ssh/id_rsa-remote-ssh.pub cloud_user@subhro2c.mylabserver.com
+
+
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/cloud_user/.ssh/id_rsa-remote-ssh.pub"
+The authenticity of host 'subhro2c.mylabserver.com (18.191.205.57)' can't be established.
+ECDSA key fingerprint is SHA256:ltRgmgobKpTm0KaXg1RN23JDEkItBtLv+wE3wuwy+o0.
+Are you sure you want to continue connecting (yes/no)? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+cloud_user@subhro2c.mylabserver.com's password:
+
+Number of key(s) added:        1
+Now try logging into the machine, with ssh 'cloud_user@subhro2c.mylabserver.com' and check to make sure that only the key(s) we wanted were added.
+
+Finally, let's add the host entry ~/.ssh/config to our SSH client config.
+
+Host python-server
+    User cloud_user
+    HostName subhro2c.mylabserver.com
+    IdentityFile ~/.ssh/id_rsa-remote-ssh
+Now from within VS Code, we should be able to remotely connect to this server using the Remote Development extension. This will take a little longer to get started the first time as it sets up the VS Code server on the Cloud Playground. But we'll be in a new window that is connected to the remote host. This will be indicated in the bottom-left corner.
+
+If we select the Extensions item in the sidebar (the odd square) we'll notice that we now see the extensions we have locally installed and also the extensions installed on the server. There aren't any remote extensions yet, so we'll want to make sure to install the Python-related ones to the server. We can find them in the list of locally installed extensions, and then hit the Install on SSH: python-server button. This button doesn't exist for extensions that run purely in the client because they work without being on the server.
+
+
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys

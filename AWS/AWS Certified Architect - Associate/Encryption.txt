@@ -1,0 +1,13 @@
+echo "Cats are Amazing" > hiddenmessage.txt
+gpg -c hiddenmessage.txt
+cat hiddenmessage.txt.gpg
+# this clears the cached password
+echo RELOADAGENT | gpg-connect-agent
+gpg -o output.txt hiddenmessage.txt.gpg
+rm hiddenmessage.txt.gpg
+rm output.txt
+gpg --gen-key
+gpg --armor --output pubkey.txt --export 'Adrian'
+gpg --armor --output privkey.asc --export-secret-keys 'Adrian'
+gpg --encrypt --recipient 'Adrian' hiddenmessage.txt
+gpg --output decrypted.txt --decrypt hiddenmessage.txt.gpg
