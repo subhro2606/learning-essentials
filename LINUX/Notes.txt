@@ -43,3 +43,7 @@ App Images -> You download the image, put it in a folder & run once command. But
 		
 #Build it from Source
 
+
+
+# https://www.rootusers.com/25-useful-dnf-command-examples-for-package-management-in-linux/
+# https://www.tecmint.com/configure-software-repositories-in-fedora/
