@@ -26,6 +26,7 @@ git commit
 #Add files from the staging area to the respository. This would add the comment without opening VIM
 git commit -m 'Changed app.js'
 
+
 #.gitignore whatever files, folders are to ignored for adding into the staging area or repo needs to be specified here
 touch .gitignore
 
