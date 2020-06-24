@@ -1,0 +1,113 @@
+Please note: iSCSI is an acronym for Internet Small Computer Systems Interface
+
+Welcome back and welcome to this topic of the course where I'm going to be talking about data and database migration products within AWS. 
+Specifically Storage Gateway and the Database Migration Service. 
+So let's jump in and get started and we're going to start with Storage Gateway. 
+
+
+Storage Gateway:
+So Storage Gateway is a service that allows you to connect an on premises data center or on premises location with AWS storage services. 
+
+So it provides two main benefits:
+The first benefit is that it allows you to migrate either your entire storage platform or part of your storage platform into AWS.
+It supports extending your existing storage platform into AWS. 
+
+Storage Gateway is actually a virtual appliance. 
+So here we are, on the main Storage Gateway page and if I click on get started, you've got three different types of Storage Gateways that are available. 
+You've got the File Gateway, the Volume Gateway and the Tape Gateway and I'm going to explain each of these throughout this lesson but let's just go ahead for now and pick the File Gateway because the first thing I want to highlight is exactly what the Storage Gateway is. 
+
+Host Platform:
+So if I click on next the thing that I'm presented with is a prompt to select the host platform. 
+So Storage Gateway is actually a virtual appliance that you run on an on premise or data center based virtualization platform so you can run it on VMware ESXI, you can run it on Microsoft Hyper-V 2008 R2 on Microsoft Hyper-V 2012 or 2016, Linux Kernel-based Virtual Machine (KVM) or you can use the hardware appliance. 
+Now another option that you've got is to run it on EC2 and I'll explain the situation why you might do that towards the end of this lesson. 
+
+The first thing that I wanted to highlight, though, is that Storage Gateway is actually a virtual appliance. 
+It's something that you download and install within your data center or your on premises location. 
+So at a high level, you'll download and configure Storage Gateway, and it's something that operates over any internet connection. 
+So it talks to AWS public space endpoints. 
+So you can use this for within a normal business premise. 
+You could even install it on a home network if you had a reason to, it's just any location with the public internet connection. 
+
+
+Now the Storage Gateway comes in three different types. 
+File Gateway, Volume Gateway, and VTL or Virtual Tape Library and the way that you interact with this and indeed, how you use it changes depending on which option you pick. 
+So let's step through these one by one and I'm just going to explain some of the architectural situations where you might use it. 
+Now, from an exam perspective, you don't need to be aware of the implementation details. 
+It's probably something that's even a tiny bit beyond what you'll require for the exam but I have seen some questions on Storage Gateway. 
+So I think, from a confidence perspective, it makes sense that you're aware of how it works from a high level architecture perspective. 
+
+File Gateway:
+So we start with the File Gateway. 
+So if you chose to deploy a file gateway, then you'll get a virtualization image so it might be a VMware disk image, it might be a Hyper-V disk image, but you'll get something to download install on your local infrastructure and then once it's up and operational, you'll be presented with one or more SMB shares. 
+So the File Gateway presents its storage as SMB shares and those are the type of shares that are used for Windows file servers. 
+So once you've got these SMB shares then they are accessible over your business network from other servers or other clients, and they can use that to upload and download data to and from that share. 
+Now, the data that you upload so the files that you upload onto that SMB share are then directly stored into S3 and they can be accessed as objects from anything that can communicate with S3. 
+So this offers a number of advantages. 
+Uses:
+It allows you to migrate existing file servers into AWS by transferring those files on a gradual basis onto this File Gateway and they'll be moved as S3 objects but it also offers you the ability if you've got any space issues inside your data center, you can provision a File Gateway and actually used the SMB shares rather than your file server and benefit from the near unlimited space that you've got available from S3. 
+So that offers a really good architecture, either to do a full or partial migration of data into S3. 
+So remember File Gateway, you can store files on it they're stored as objects in S3 and it's accessible using SMB. 
+Remember all of those key facts for the exam. 
+
+Volume Gateway:
+Next, we've got Volume Gateway and Volume Gateways operate in much the same way as File Gateways from an infrastructure perspective, so you configure it. 
+You download the virtual machine image, you provision it, and then it's up and running but with Volume Gateways, instead of accessing file shares, you create and access volumes.  Now these volumes are accessed over a protocol, which is called iSCSI(Internet Small Computer Systems Interface) and iSCSI is generally used with NAS(Network Attached Storage) product or SAN(Storage Area Network) products. 
+It's essentially iSCSI over a network connection, so it's network attached storage. 
+Now, anything that can use iSCSI mounts can use the Volume Gateway. So normally this would be servers. 
+Servers might mount these volumes, format them with a file system such as NTFS or EXT3 or four, and then they can use those network mounted volumes to store data on. 
+
+Use Cases:
+So let's say you're in a data center, where you want to migrate some data into AWS. You can create one of these volumes, present it to a server, format store data on there, and then that is accessible inside AWS. 
+Now you can take these volumes that are managed by a Volume Gateway, and you can take a snapshot and use this snapshot to create an EBS volume, and that's accessible directly from EC2 instances. 
+Alternatively, is part of a DR plan, you could provisions in a Storage Gateway inside AWS and directly access those volumes and present them also over iSCSI to your EC2 instances. 
+Let's say that your business premises burned down or suffered some otherwise catastrophic failure in this part of your DR, you could basically take a storage gateway deploy it inside AWS and then access it from your EC2 based instances. 
+So that's another really important way that you can use Storage Gateway. 
+
+Now the important part about Volume Gateways is that these are iSCSI presented volumes. 
+-You can't access the files individually without mounting the entire volume, so that's critical to understand and from a Volume Gateway perspective, you can either have gateway stored volumes where all of the data is actually stored on the gateway itself and then snapshot to taken into AWS so they're stored on S3.
+-Or you can have a gateway cached volume on what that does is it stores the primary copy of the data inside AWS and then it downloads or uploads any data that's frequently accessed and stores a temporary copy of that on the volume gateway itself. So if you were space constrained in your data center but you wanted access to this near unlimited AWS storage, then he could use a gateway cached volume. 
+-Your cache will be relatively small. It would store only frequently access data, and the rest will be stored in S3 but you couldn't access it directly from S3. 
+That's a critical difference between that and the File Gateway. With this, remember, it's a volume. 
+
+So while the data is stored in AWS with the gateway cached volume and the local cache is available for high speed frequent access, it still is treated as a volume. 
+You can't access the individual files. 
+
+Uses:
+A gateway stored volume would generally be used when you want to take the data that you've got on premise but utilize S3 for snapshot based backups of 
+that volume, and that's when you'd use a gateway stored volume. 
+You'd still need all of the local space for the size of the volume, but you could take snapshots into AWS. 
+
+
+
+VTL:
+Now lastly, we've got VTL or virtual tape library, and what that allows us to do is to present a virtual tape library also over iSCSI to any compatible backup software. 
+
+Legacy Way of doing things:
+So a lot of backup software is capable of using tape robots or tape loaders to perform backups. 
+Essentially, these and network attached devices that generally include one or more tape drives and then a robot mechanism, which can automatically move tapes from a tape shelf into the drive for backups and restores. 
+Now this tends to have a very high admin overhead because somebody has to manage the backup software and change the tapes, and it's also very costly and a very high risk to the business. 
+If you have this in the same location as your data and the building burns down then you'll lose everything. 
+If you have it in a separate location, then you need to account for travel of your staff between your main premises and wherever this backup system is. 
+
+
+So Storage Gateway operating in VTL mode or virtual tape library mode allows you to present a virtual tape drive and a virtual tape shelf. 
+So any data that is backed up onto this virtual tape drive is stored directly in S3 and that's available for rapid access. 
+So there is some small amount of caching on the actual storage gateway itself but most of the data for what it sees as tapes are actually stored in S3. 
+Now because it's a virtual tape loader, it also offers you the virtual functionality to be able to take a tape and put it on a tape shelf and when you do that, when you put the tape onto a tape shelf, it migrates the data from S3 onto Glacier which is cheaper and better for long term archival. 
+
+Use Cases:
+Now, the reason why you might use Storage Gateway in VTL mode is maybe if you've got a fairly high admin overhead backup system, it's expensive. 
+and you want to remove that from your local premises where you can just implement Storage Gateway and VTL mode and straight away, you've got all of that cost outsourced into AWS or maybe you want to use it as a way to migrate your data into AWS. 
+By migrating your backups over to storage gateway using VTL, it means that your backup data is then stored inside AWS and then it's part of a migration. 
+You could take that data and spin up all of your infrastructure inside AWS. 
+So it offers the ability to do a migration over time but also to extend your data center into AWS. 
+Your backup system is experiencing capacity issues you can easily extend it with Storage Gateway. 
+So that's really all you need to know from an exam perspective you've got these three different types of Storage Gateway, file, volume, and VTL. 
+Each of them serve different purposes, but they all use AWS storage at the backend and, of course, Storage Gateway works over any public internet connection it's a public endpoint and so all it requires is access to the storage gateway public endpoint for that region. 
+
+
+
+******Now I mentioned this at the start of the lesson, you can also deploy the Storage Gateway inside AWS, so inside a VPC and if you do that, then you've got access to all the stuff that you used it for on premise but you can present that to your EC2 instances. 
+So you might use that as part of a big bang migration or as part of a DR event. 
+If you have a major event on the business premise, you can deploy a Storage Gateway into AWS and access the data from your EC2 instances. 
+With that being said, that's everything I wanted to cover. 

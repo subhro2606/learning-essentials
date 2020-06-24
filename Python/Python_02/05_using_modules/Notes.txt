@@ -1,0 +1,20 @@
+#Builds a python distribution
+python3.7 setup.py bdist_wheel
+
+#install the distribution/package
+pip install ./dist/sampleproject-1.3.1-py3-none-any.whl
+
+#lists all the installed packages
+pip list
+
+#Uninstalls the distribution/package
+pip uninstall -y helpers
+
+#This is to install a package from a package directory, so that whatever code changes you made inside the package directory, the same is reflected in the package installated globally
+pip3.7 install --editable
+
+#This gives the doc String
+helpers.__doc__
+
+#Run doctest from command line
+python3.7 -m doctest -v  ./src/helpers/strings.py

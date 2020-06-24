@@ -4,5 +4,5 @@ def square(a):
 
 square_lambda=lambda num:num*num
 
-assert square(4)==square(4)
+assert square_lambda(4)==square(4)
 

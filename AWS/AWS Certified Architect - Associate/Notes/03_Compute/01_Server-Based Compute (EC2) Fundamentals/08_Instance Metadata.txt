@@ -1,0 +1,70 @@
+Instance Metadata 
+Instance metadata is data relating to the instance that can be accessed from within the instance itself using a utility capable of accessing HTTP and using the URL: 
+http://169.254.169.254/latestimeta-data 
+
+Instance metadata is a way that scripts and applications running on EC2 can get visibility of data related to the instance without making an API call.
+ 
+So using the metadata gives you the ability to quickly and simply access information about the running instance. 
+The metadata can provide the current external IPv4 address for the instance, which isn't configured on the instance itself but provided by the Internet gateway in the VPC. 
+It provides the Availability Zone the instance was launched in and the security groups applied to the instance. 
+In the case of spot instances, it also provides the approximate time the instance will terminate. 
+
+For the exam: Remember the IP address to access metadata. 
+
+
+############################################################################################################################################
+
+Okay, welcome back and in this lesson, I want to briefly touch on instance metadata. 
+So instance metadata is a feature that you can use with EC2 and you can use it to gain access to information about the instance from within the instance. 
+So imagine that you've got an application running inside an EC2 instance, and in order for the application to operate, it needs access to some information about that instance. 
+Maybe it's the size or type of the instance. 
+Maybe it's the IP addressing or DNS information about that instance. 
+Whatever it is, we know that it needs access to that information. 
+So how can it get it? Well, you could make AWS API calls, but that relies on it having network connectivity, which it might not have. 
+It might be a private only instance, with no access to make AWS API calls. 
+Instance metadata allows an application to get access to information just about that one instance, and it's actually pretty simple to do. 
+There's a URL that you can use inside every EC2 instance, and it's known as the metadata URL. 
+You need to memorize this IP address and ideally, this entire URL. 
+I'm not going to ask you to memorize many things for the exam, but this is one of the things that you need to memorize. 
+There will be a question in the exam testing whether you know this IP address and whether you know the exact URL to access the metadata. 
+Every single time I have taken the SA Associate exam. 
+I've had this question. 
+So inside every EC2 instance you can always browse to HTTP 169.254.169.254/latest/meta-data You can browse that URL no matter what the state of the networking on the instance and you can use it to get access to a lot of really useful information about that instance. 
+Now I will make sure that I include a link in the lesson description that details all of the information you can access from this metadata URL but there are a couple of really common examples of things that you might use it for, so you might browse to this URL inside the instance to get the AMI or Amazon machine image that was used to create the instance. 
+You'll browse to this URL to get the instance ID of the instance or this URL to get the type of the instance. 
+So the particular type and size of the instance that your application is running on it could get this information from this URL. 
+Now your application might use this to determine how much processing capability it has available, or, alternatively, whether it has access to any advanced features such as graphics processing units. 
+So using the metadata gives you the ability to quickly and simply access information about the running instance. 
+Now another fact that I haven't talked about yet is that when you create an instance and you give that instance a public IP address, it would be logical to assume that that public IP address is configured on the instance itself. 
+That's actually not the case, and I'll be covering that more in the next topic of the course, the EC2 intermediate topic but for now, be aware that the way that this public IP address works is that every instance has a private IP address and if you do configure a public IP address, there's a network entity inside AWS known as the Internet Gateway that translates between the private address and the public address. 
+So your instance is not configured with your public IP address and I can demonstrate this by moving across to my terminal, and I still have this EC2 instance running from the previous lesson when I demonstrated security groups. 
+If I move over to this instance, which remember, should have this IP address. 
+So 54.89.191.153 if I moved to the instance and I run an ifconfig command in Linux which displays the details about the networking cards. 
+You'll know that at no point does it have any mention of this external IP address. 
+It only lists the internal IP address that's associated with this instance specifically 172.31.25.155 and that's the private IP address that the instance has. 
+The private IP that's associated with the elastic network interface connected to this instance, it doesn't have the public IP address. 
+Now let's say that I'm running an application in this instance, while I could use the metadata to retrieve the public IP address to do that I'd need to use this command. 
+Now all curl is doing that's just a command to interact using HTTP. 
+So inside an application, I would have some code that would poll this URL. 
+So this URL contains the metadata IP address so 169.254.169.254 again remember that IP address. 
+It uses /latest /meta-data, and then, at the end of that, it's retrieving a particular value so public-IP version four. 
+So if I press Enter that's going to retrieve the public IP address that's associated with this instance, which is 54.89.191.153 I can verify that is the correct IP address. 
+So it is. 
+It's the same IP addresses as the public IP version four address from the console. 
+So this feature is really powerful. 
+It's available insight every EC2 instance and offers you the ability to get access to information about instance. 
+It's actually used for lots of other things as well. 
+So when we built this instance in the last lesson, I actually used some user data. 
+So I specified some build instructions in order to install a web server, pull down the cat picture assets, and essentially make this Cat Hall of Fame website. 
+While those build commands are also available inside the instance using a similar mechanism, it's how the instance builds itself. 
+It accesses this metadata, pulls the instructions out of that, and then uses those to build the instance. 
+It's the same architecture, so throughout the course, and as you start using AWS in the real world, you will start using this metadata functionality extensively if you use EC2. 
+It's important to understand and for the exam, if there's one thing that I really stressed the importance of remember this URL you need to know the full IP address. 
+Try to remember it as 169.254 repeated So 169.254.169.254 and then /latest/meta-data. 
+You will need that in the exam. 
+You will have a question on it and that's all I'm going to cover in this lesson. 
+I want to keep it brief. 
+I just wanted to introduce the concept of this metadata and I'm going to be expanding on this extensively as we move through the course. 
+At this point go ahead, mark this lesson as complete and when you're ready, we'll be starting the second topic in this section of the course, which is EC2 intermediate. 
+So I can't wait to get started. 
+So go ahead and mark this video as complete and when you're ready, join me in the next topic.

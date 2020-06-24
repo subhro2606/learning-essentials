@@ -1,0 +1,199 @@
+EBS optimization:
+Legacy non-EBS-optimized instances used a shared networking path both for network data and storage data communications which means both of those different types of data contested for access to that storage path. 
+For a resource intensive application running on an EC2 instance, which is running heavy on storage, that could disrupt traditional networking transfer and if you had an application that was heavy on normal data transfer, it could impact storage performance. 
+EBS optimization created a separate, dedicated path for storage. Historically this was optional and you could enable it for an extra cost, but for modern instances this feature is included by default.
+Benefits of EBS Optimized Instances: 
+•	Access to better and faster storage. 
+•	Improved network data transfer rates.
+•	Higher level of consistency on both.
+**To get maximum performance from EBS apart from selecting appropriate sized instance, you also need to make sure that using EBS optimized instances which any current generation instances because with those you get the maximum performance. 
+Performance implications of restoring volumes from EBS Snapshots:
+•	If we take a snapshot of an EBS volume, it's copied in S3. If we launch an instance from the snapshot it would create the new volume and allocate the space EBS but  it doesn't immediately copy all that data to EBS from S3, it copies it in the background. 
+•	This means that you don't get the maximum performance of an EBS volume created from a snapshot until all that data has been copied across in the background. If you ask for some data from the volume that's not yet been copied, it will immediately be copied. 
+•	One way to improve the performance id to perform a read of every part of that volume in advance before moving it into production.
+Enhanced Networking:
+EC2 uses a software called a hypervisor that runs on the EC2 host, that carves up the physical resources, present them as individual virtual machines, and then control access to the physical resources for those virtual machines, so EC2 instance is a virtual machine on the EC2 host.
+Since there can be multiple EC2 instance on a host, Hypervisor controls, whether our EC2 instance  that currently has access to the networking card that's in the physical EC2 host. Historically, that was done using a software, that emulated a real hardware. Since EC2 instance is not accessing its own dedicated networking card  but running through software, that comes with some performance implications because the software is not as fast as accessing through real hardware, and it's not as consistent. 
+Enhanced Networking uses a technique called SR-IOV(single root input output virtualization) that allows a single physical network card to appear as multiple fake physical devices, known as virtual functions. 
+So rather than the one physical network card presenting itself as one physical adapter, it presents itself as multiple physical adapters. For a hypervisor that supports this, each VM can be given direct access to one of these virtual functions. So instead of hypervisor controlling VM accesses hardware at a time, the VM(s) or EC2 instances are capable of interacting directly and it's the network card, which handles this interaction. 
+
+Benefits of Enhanced Networking:
+•	Less CPU is used on the host during heavy utilization. 
+•	Lower consistent latency.
+•	Better networking performance. 
+So enhanced networking when you're using EC2 uses SR-IOV. EC2 delivers this via the Elastic Network Adapter (ENA) or Intel 82599 Virtual Function (VF) interface. So enhanced networking is one component of achieving maximum performance of networking inside AWS.
+Placement groups:
+When you launch a new EC2 instance, the EC2 service attempts to place the instance in such a way that all of your instances are spread out across underlying hardware to minimize correlated failures. You can use placement groups to influence the placement of a group of interdependent instances to meet the needs of your workload. Depending on the type of workload, you can create a placement group using one of the following placement strategies:
+Cluster: 
+•	Packs instances close together inside a single Availability Zone. 
+•	This strategy enables workloads to achieve the low-latency network performance necessary for tightly-coupled node-to-node communication that is typical of HPC applications.
+•	A cluster placement group is a logical grouping of instances within a single Availability Zone. A cluster placement group can span peered VPCs in the same Region. Instances in the same cluster placement group enjoy a higher per-flow throughput limit of up to 10 Gbps for TCP/IP traffic and are placed in the same high-bisection bandwidth segment of the network.
+•	Cluster placement groups are recommended for applications that benefit from low network latency, high network throughput, or both. They are also recommended when the majority of the network traffic is between the instances in the group. 
+•	To provide the lowest latency and the highest packet-per-second network performance for your placement group,  we need to choose an instance type that supports enhanced networking. 
+
+•	We recommend that you launch your instances in the following way:
+•	Use a single launch request to launch the number of instances that you need in the placement group.
+•	Use the same instance type for all instances in the placement group. If you try to add more instances to the placement group later, or if you try to launch more than one instance type in the placement group, you increase your chances of getting an insufficient capacity error.
+•	If you stop an instance in a placement group and then start it again, it still runs in the placement group. However, the start fails if there isn't enough capacity for the instance. If you receive a capacity error when launching an instance in a placement group that already has running instances, stop and start all of the instances in the placement group, and try the launch again. Starting the instances may migrate them to hardware that has capacity for all of the requested instances.
+Partition:
+•	Spreads your instances across logical partitions such that groups of instances in one partition do not share the underlying hardware with groups of instances in different partitions. 
+•	This strategy is generally used to deploy large distributed and replicated workloads, such as Hadoop(HDFS & HBase), Cassandra, and Kafka across distinct racks.
+•	Partition placement groups help reduce the likelihood of correlated hardware failures for your application. When using partition placement groups, Amazon EC2 divides each group into logical segments called partitions. Amazon EC2 ensures that each partition within a placement group has its own set of racks. Each rack has its own network and power source. No two partitions within a placement group share the same racks, allowing you to isolate the impact of hardware failure within your application.
+•	When you launch instances into a partition placement group, Amazon EC2 tries to distribute the instances evenly across the number of partitions that you specify. You can also launch instances into a specific partition to have more control over where the instances are placed.
+
+•	A partition placement group can have partitions in multiple AZ in the same Region. A partition placement group can have a maximum of 7 partitions per AZ. 
+•	The number of instances that can be launched into a partition placement group is limited only by the limits of your account.
+•	In addition, partition placement groups offer visibility into the partitions — you can see which instances are in which partitions. You can share this information with topology-aware applications, such as HDFS, HBase, and Cassandra. These applications use this information to make intelligent data replication decisions for increasing data availability and durability.
+•	If you start or launch an instance in a partition placement group and there is insufficient unique hardware to fulfill the request, the request fails. Amazon EC2 makes more distinct hardware available over time, so you can try your request again later.
+Spread:
+•	Strictly places a small group of instances across distinct underlying hardware to reduce correlated failures.
+•	A spread placement group is a group of instances that are each placed on distinct racks, with each rack having its own network and power source.
+•	Spread placement groups are recommended for applications that have a small number of critical instances that should be kept separate from each other. Launching instances in a spread placement group reduces the risk of simultaneous failures that might occur when instances share the same racks. 
+•	Spread placement groups provide access to distinct racks, and are therefore suitable for mixing instance types or launching instances over time.
+•	A spread placement group can span multiple AZ in the same Region. 
+•	You can have a maximum of 7 running instances per Availability Zone per group.
+•	If you start or launch an instance in a spread placement group and there is insufficient unique hardware to fulfill the request, the request fails. Amazon EC2 makes more distinct hardware available over time, so you can try your request again later.
+
+Use Cases:
+•	Use cluster placement groups for maximum performance.
+•	Spread placement groups for maximum availability.
+•	Partition placement groups if you've got large infrastructure platforms where you want to have some visibility of where those instances are from a partition perspective.
+
+
+
+
+
+###########################################################################################################################
+So let's jump in and get started. 
+Historically, the way the EC2 instances communicated with both storage and networking was over a shared communication path. 
+So a single network interface on the EC2 host was used by one or more EC2 instances on that shared communication into phase carried both storage data as well as traditional networking data. 
+Now the problem with that is that because it was a shared communication path, both of those different types of data contested for access to that storage path. 
+So if you had an application that was ruling on an EC2 instance that was demanding, if it's storage, you'd find that could also disrupt traditional networking transfer and the same was true in reverse. 
+If you had an application that was heavy on normal data transfer, it could impact storage performance EBS optimization was one of the initial performance. 
+Optimization features added to EC2 and it created a separate, dedicated path for storage. 
+So if you enabled EBS optimize mode, which was historically optional, then you get access to a second path for data transfer. 
+So no longer would your normal networking path and your storage data transfer contend with each other that operate over individual paths and that provided three different benefits. 
+The first was access to better and faster storage. 
+The second was improved. 
+Network data transfer rates on the third was a higher level of consistency on both of those, so you wouldn't get a large amount of performance variants as both of these contenders for the same data transfer path. 
+Now, historically, this was optional. 
+So if we go to lodge an instance pajamas on Linux to change this drop down to all generations and then I select general purpose in this dropdown, you'll see that we've got all the previous generation in serious instances. 
+Now, one of these columns is EBS optimized, available. 
+It wasn't available in all instance sizes when it was initially introduced. 
+If I scroll all the way down to the bottom for example and look at the M3 series. 
+You'll notice two M3 sizes. 
+So T3.medium and I'm three that large that don't include ECS optimized capability surface like the M3.extralarge which was capable of EBS optimized mode and then go to configure instance details. 
+It was an option available at this stage you could launch. 
+It is an EBS optimized instance and originally it did cost extra. 
+You needed to specifically add it and then and only then would you gain the performance benefits. 
+Now, at this point, all modern instances include this by defaults. 
+If a select Amazon looks to again this time, change this general purpose and go to current generations, the M5 is the current general purpose generation and you'll note for all sizes of that EBS optimized is available, but modernity for selected and then go to instance details you don't have the option of disabling. 
+It comes as default and you don't get any performance change or pricechange by disabling it. 
+So that's important to understand. 
+For the exam and real world usage in order to get maximum performance from EBS you need to select the appropriate sized instance, because, of course, larger instances come with higher performance levels but you also need to make sure that using EBS optimized instances which any current generation instances because with those you get the maximum performance. 
+
+
+
+
+
+Now, another performance technique you need to be aware of is to do with snapshots. 
+When you initially launched an EC2 instance, or when you manually launch an EBS volume, you automatically get the maximum performance from that volumes. 
+If I create ah 100 GB volume then straight away, I'm going to get the maximum performance from that volume that I should based on the storage type that I selected. 
+Now, if I create a snapshot from this EBS volume and I'll just put some random text in for the name and hit create snapshot. 
+At this point, the data on this volume has been copied into S3, and it forms part of the snapshot. 
+So this is a snapshot that's just been completed. 
+Now, if this snapshot contained 100 GB of data and to create a new volume from the snapshot, what it would actually do would be to create the new value and allocate the space EBS but perform the copy off the data from S3 to EBS overtime. 
+So when you create the initial volume, but you base it on a snapshot, it doesn't immediately copy all that data to EBS. 
+It copies it in the background. 
+This means that you don't get the maximum performance of an EBS volume created from a snapshot until all that data has been copied across in the background. 
+If you ask for some data from the volume that's not yet been copied, it will immediately be copied. 
+Now, there are techniques that you can do to improve this performance and one of those is performed a read of every part of that volume in advance before you move into production but just be aware that there are performance implications by restoring volumes from snapshots. 
+You probably won't need to know the details of that for the exam, but it is useful to be aware because you might get an exam question in this area and knowing this might help. 
+So that's EBS optimization and just a little piece of information about snapshots. 
+
+Now, the next two things I want to talk about enhance networking and placement groups. 
+EC2 is a virtualization product. 
+It's essentially a virtual machine, known as an instance, that's running on an EC2 host. 
+An EC2 host is physical hardware and running on the EC2 host is a piece of software called a hypervisor, and it's the responsibility of this hypervisor to carve up the physical resources, present them as individual virtual machines, and then control access to the physical resources for those virtual machines. 
+So the hypervisor is the thing that controls, whether it's your EC2 instance or my EC2 instance, that currently has access to the networking card that's in the physical EC2 host. 
+Now historically, that was done with software. 
+It was efficient software, and it's optimized but it's still emulating real hardware, so your virtual machine, your EC2 instance it's not accessing its own dedicated networking card. 
+It's running through software, and that comes with some performance implications because its software it's not as fast as accessing through real hardware, and it's not as consistent. 
+Now enhanced networking, which is a feature of EC2 instances, uses a technique called SRIOV an this stands for single root input output virtualization. 
+Now the name sounds pretty complicated. 
+It's not important that you remember the name or even remember SRIOV. 
+The feature, though, is pretty simple. 
+One physical network adapter in the EC2 host is capable as presenting itself as multiple kind of fake physical adapters, and these are known as virtual functions. 
+So rather than the one physical network card presenting itself as one physical adapter, it presents itself as multiple physical adapters. 
+For a hypervisor that supports this, it means that each virtual machine can be given direct access to one of these virtual functions. 
+So rather than the hypervisor having to control which virtual machine accesses hardware at what time the virtual machines or EC2 instances are capable of interacting directly and it's the network card, which handles this interaction. 
+Now this comes with a few benefits. 
+It means less CPU is used on the host during heavy utilization. 
+It means lower latency levels, and it means a better consistency of latency so it doesn't vary, very much. 
+Essentially, it gives us better networking performance. 
+So enhanced networking when you're using EC2 uses SRIOV. 
+It's what allows the higher networking performance better latency and all of the good networking things. 
+Now EC2 provides to network adapters in instances that provide this advanced functionality, the first is the Intel virtual adapter and the second is the Elastic Network Adapter, or ENA which provides really high end speeds and a lot of the newer EC2 instance types and generations will be coming with this by default. 
+So enhance networking is one component of achieving maximum performance of networking inside AWS.
+
+
+ 
+The other is placement groups now there are three types of placement groups available in EC2 and they all exist for different reasons. 
+At a high level, though, they allow some level of control or visibility about where your EC2 instances run from, it essentially allows you to see or to control physical location. 
+Now that's powerful, because we can use that to improve performance or reliability. 
+So let's step through and quickly look at each of the three types of placement group and don't worry, there's going to be a hands on lab in this topic of the course, where you'll get to practice some EC2 networking optimization, I'm just covering the theory at this point. 
+So the first type of placement group is known as a cluster placement group. 
+
+Cluster Placement Groups:
+Cluster placement groups are designed for performance, they're pretty easy to configure. 
+We just go to placement groups, create a placement group. 
+We'll give it a name. 
+So I'll call this one clusterpg for cluster placement group, and you'll be asked to select a strategy. 
+Of course, there are three strategies cluster, spread, and partition. 
+We're covering cluster so I'll select that and hit create and that's it. 
+You don't need to do anything else when you create a placement group. 
+Now, cluster placement groups are purely designed for performance. 
+They're limited to one availability zone. 
+So when you create a cluster placement group, you don't specify the availability zone but when you launch instances into that placement group, they're locked into the availability zone at the first instance that's launched into them but what they actually do is they ensure that the instances launched inside a cluster placement group are physically close together. 
+So let's say you launched four EC2 instances into this placement group. 
+What you'll tend to find is that these EC2 instances will probably be running on the same EC2 host so they'll achieve maximum network performance because that networking traffic might not even need to leave that host. 
+It can occur internally, so that's always the best option and cluster placement groups are the thing that will allow you to achieve the maximum possible performance inside EC2. 
+Any EC2 instances that are inside a placement group will be able to achieve the maximum possible networking speed between those EC2 instances, and they can all do so at the same time. 
+Cluster placement groups work best with enhance networking in order to get that peak performance. 
+So keep that in mind for the exam, generally, for any high performance instances, you, of course, need to pick a latest generation, which will include EBS optimization. 
+You need to make sure you're using enhance networking, and you need to make sure that they're placed inside a placement group and if you do those you're going to get the maximum possible performance. 
+Now for the exam and real world usage a tip is that you should always try to launch all of the instances that go inside a placement group at the same time because when you do that AWS reserve capacity. 
+Now they do reserve extra capacity. 
+So, for example, if I launched four EC2 instances into this placement group, this clusterpg then AWS they're going to find a suitable occasion to run those four EC2 instances from. 
+They might make sure this space for an additional two in case I want to launch more but it is possible if I only launch four originally and I try to launch another four, I might get a capacity issue. 
+So there can be capacity issues that is solely isolated to a cluster placement group. 
+In general, launch all the instances that you want to launch initially with the placement group and additionally, best practice is to always pick the same type of instances to be in the same cluster placement group. 
+So, by picking the same type and launching them all initially, you get the maximum chance that you'll be able to launch the placement group with the instances successfully. 
+So cluster placement groups can only be in one availability zone, so that's the way that they achieve the maximum performance is to be in one availability zone. 
+
+
+
+Partition Placement Group:
+Next, we've got partition placement groups. 
+Now partition placement groups are designed to ensure maximum application availability. 
+Let's say you've got a particular application, maybe an analytics application or a big data application by using partition placement groups, you're able to ensure that instances are launched into separate partitions. 
+So what's a partition? Well, it's an isolated group of infrastructure inside AWS. 
+So inside an availability zone, you might have multiple partitions. 
+Think of these as racks, so storage, compute, networking altogether and they're kind of isolated from the other partitions. 
+The idea is, if a single partition fails, you don't lose resources in another partition, so partition placement groups are a way that you get exposed to an even smaller fault domain than availability zones. 
+You might have an application that uses hundreds of EC2 instances, and you want to make sure that they're evenly split across all of the infrastructure partitions inside a region and so you'll create a partition placement group that can spread across different availability zones and each of those availability zones will have seven partitions in, and you can use that to split those instances across all of those seven partitions. 
+So you get visibility of that and, if needed, you can give that information to applications so the application itself can have visibility over its infrastructure placement. 
+So generally, partition placement groups are designed to ensure availability and some level of infrastructure spread for applications that use a large amount of EC2 instances. 
+So partition placement groups tend to only be use for larger infrastructure deployments but it's worthwhile knowing exactly how they work. 
+
+
+Spread placement groups are purely for availability. 
+So spread placement groups are designed for a maximum of seven instances per availability zone. 
+Remember when I was just talking about partition groups I mentioned that there are seven partitions per availability zone. 
+With spread placement groups, it means each individual instance is going to be in its own partition. 
+They're designed for small infrastructure deployment, so there's going to be a maximum of seven Instances per availability zone and they're design for situations when you want to ensure that every single instance is operating on a separate partition. 
+So these great for email servers, domain controllers, file servers, and application, highly available pairs anything where you need to ensure that the failure of one partition won't take down all of your instances then you would use a spread placement group and that's the theory of placement groups. 
+So you're going to use cluster placement groups for maximum performance, spread placement groups for maximum availability, and then partition placement groups if you've got large infrastructure platforms where you want to have some visibility of where those instances are from a partition perspective. 
+So at this point that is all the theory that I want to cover. 
+There is a hands on lab in this topic of the course where you'll get practice using these techniques, so tuning network performance inside EC2 but for now, that is all of the theory I want to cover in this area. 
+So go ahead, mark this video as complete and when you're ready, join me in the next.

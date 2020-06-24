@@ -1,0 +1,181 @@
+Welcome back and over the last few lessons, I've been talking in a fair amount of detail about the different types of load balancers available within AWS.
+
+
+Achieving Highly available & scalable architecture using ELB:
+Now load balancers are a group of products that help you in two main ways inside AWS when you're designing solutions.
+They help you implement a highly available architecture and I hinted at the start of this topic that because they abstract away from the instances, they also help you implement a scaling architecture.
+Now, the way that you implement scaling using load balancers is through a product called auto scaling groups and auto scaling groups use a pair of underlying products called launch configurations and launch templates.
+So over the next two lessons, I want to talk about both of the components that we can use together with load balancers to implement a scalable architecture.
+
+
+Launch Template & Launch Configuration:
+In the first lesson, I'm going to cover launch templates and launch configurations which essentially do the same thing.
+Launch configurations came first, and historically they've been the way that you actually provision scaleable infrastructure, launch templates are a new version of large configurations that had a lot of additional functionality and work with some of the newer features of the newer instance types.
+So this lesson we're going to focus on launch templates and large configurations.
+In the next lesson, we're going to look at auto scaling groups.
+So let's get started in any new deployments, you should, wherever possible, preference using launch templates because they add significantly more functionality.
+They both do the same thing though they specify what you want to launch.
+So they're essentially a template defining the configuration of the one or more instances that you want to launch.
+Now you can use these manually, but commonly you generally use a launch template or a launch configuration as part of an auto scaling group.
+So I think the easiest way to demonstrate exactly how both of these constructs work is to go ahead and implement them. So that's what I'll do.
+I'm going to move across to my AWS console, and I'm going to be EC2 part the console.
+
+**So generally you'll be using launch templates and launch configurations to reduce the admin overhead of launching EC2 instances.
+So before I get started, I'm just going to quickly move across to keep pair and just create a new key pair for this lesson.
+So I'm going to call this key pair LCLT for launch configuration launch template and then ASG for Auto Scaling Group.
+So I'll create that key pair and download it to my local machine.
+Now that I've got that created, I can go ahead and step you through the creation of both launch templates and launch configurations.
+So launch configurations came first, so I'll start with that.
+
+Creating the Launch Configuration:
+So I'll move to launch configurations.
+I'll go ahead and click on "Create Launch Configuration." So what a large configuration does is specify a list of configuration options that you want to use when creating an instance.
+So you're going to recognize a lot of this dialogue because it's the same look and feel as what occurs when you actually create an EC2 instance.
+So you start off by specifying a number of options that we'll use to create one or more instances.
+So let's step through this, and I have to start by specifying the AMI to use.
+So I'll be using Amazon Linux too.
+So I select that now this will also look familiar.
+So this is also a dialogue that you're presented with when you're creating an EC2 instance, it's where you have to specify the type and size of instance to use.
+Now the default is T2.micro, which is free tier eligible.
+So generally, when I'm creating any test deployments, I'm either going to use the T2.micro or the T3.micro.
+I'll scroll down for now and pick T3.micro and then go to "Next" "Configure Instance Details." It'll warn me that I've changed the type.
+That's fine.
+I'll accept yes and move to next.
+
+
+Launch Configuration:
+Now this is where it starts to look slightly different, So a launch configuration is essentially a discreet piece of configuration. It defines the what so what you're trying to launch. So many of the options that you might select while creating an EC2 instance. You might not see these spot for launch configuration, and that's fine.
+So if we look in the diagram on the right of the screen, essentially both launch configurations and launch templates will get you to specify a common set of attributes so the AMI to use, the instance type to use, whenever storage you want, the key pair and the associated IAM roles any user data that you want to use, if you want to automatically configure and bootstrap and instance any purchase options.
+So if you wanting to request spot instances, you can optionally specify network configuration and security groups, and you'll see this is exactly how this looks.
+This is the information that I'm specifying.
+So this case, I'm just going to call this LC for launch configuration.
+You need to give it a name.
+I will not be using spot instances.
+I will also not be using an IAM role.
+I'll not enable CloudWatch detailed monitoring, and I'll talk about exactly what that is in the next section of the course and also I won't want to pick EBS optimized I could if was launching this in production but I won't be doing that.
+Now if I expand advanced details again, this will look familiar because it's exactly the same configuration information that you'll get if you creating an EC2 instance specifically, what I want to do is add some user data.
+
+Uses of Launch Configuration:
+One of the commonly used scenarios for a launch configuration is to use it as part of an auto scaling group, and generally you want to automatically provision EC2 instances and so, generally, you'll specify some user data to perform a set of automated steps.
+
+So I'm going to paste in some user data and that's available inside this lessons folder in the course GitHub repository.
+So it's inside 07 Hybrid and Scaling 1_LB and ASG and then there is a folder called LC and LT inside there.
+That's a file called bootstrap one.
+So I'm just going to copy the contents of that file and paste it into this user data box, and you might recognize this from earlier lessons in the course.
+Essentially this is just going to build one of our cat web web servers.
+I'm going to paste that in.
+I'll be asked to provide some IP addressing information.
+So the options that we have our only assign a public IP address to instances launched in the default VPC and subnet.
+So that often is enough.
+We can select to auto assign a public IP to every instance, or we can say, do not assign a public IP address to any instances.
+Now the default is enough because I'll be using the default VPC.
+I'll be using the default VPC for this demonstration.
+So if I hadn't got a default VPC on either need to create one or select this second option to always assign a public IP.
+So I go to next add storage again the same dialogue that used to using if you created EC2 instances.
+In this case, I'll accept the defaults.
+Move on to next configure security group.
+You can elect to create a new security group, and I will do so.
+I'll just call it web SG for web security group, and I will use the same for description because this is a cat web server.
+I want to add HTTP rule.
+I'll do that.
+I'll go to review again, the dialogue looks exactly the same as if you were creating an EC2 instance manually, and that's fine.
+I'm going to go ahead and create the launch configuration.
+Now you will be asked to select a key pair, and this key pair is going to be associated with the launch configurations.
+It will be automatically used if you launch any instances from this launch configuration, so I'll be choosing an existing key pair and I'll select the key pair that created and start this lesson.
+I'll acknowledge that I've got a copy of that key pair and then create the launch configuration.
+Okay, so this point I've got the launch configuration. 
+
+Launch Configurations are immutable:
+And for the exam, it's worth stressing. "You cannot change a launch configuration after you've created it." So the details of this launch configuration and now static it's an immutable object.
+What you can do is go ahead and create a new launch configuration, but you cannot change the settings inside an existing one.
+Now the logic of that is that you could be using this launch configuration as part of auto scaling group, so you don't want to be able to adjust it and have that impact existing auto scaling groups.
+So remember, when it does come to talking about auto scaling groups in the next lesson, you can change the launch configuration associated with an auto scaling groups.
+You could create a new one with new settings and then change which launch configuration is used on the auto scaling group but you cannot change the config of an existing launch configuration that's really essential to understand.
+
+
+
+
+Launch Templates:
+Okay, so let's move and talk about launch templates so launch templates are the newer version of launch configuration, so they serve a very similar purpose.
+They allow you to specify a set of configuration items for launching instances, but with launch templates, we've also got additional functionality, so launch templates are versioned, and they support inheritance.
+So you can create a base template and then create new templates based on that base template so you can inherit settings between your launch templates.
+They support tagging, more advanced purchasing options, and additionally, and this is especially important to the exam, if you do want to control any of the more advanced features of the newer instance types than you need to use launch templates.
+So if you want to configure elastic graphics, any of the T2 or T3 instance type unlimited settings so remember that's a CPU setting.
+If you want to configure placement group's capacity reservations or advanced tenancy options, they're all things that you need to configure in a launch template rather than a launch configuration.
+
+Creating Launch Templates:
+So let's go ahead and create a launch template.
+So this will look very similar to how the large configuration looked, so I'll be creating a new template and to keep things simple, I'll be calling it launch template, and I'll use the same for description.
+Now because this is the first launch template, I'm creating one from scratch but this is where you'd select to create a new template version so a new version of an existing template. I could also specify a source template to use as the foundation for this template. Now again, because this is the first template that I'm creating in this account, none of that applies. But I wanted to point out where you would set this option.
+So just the same as with the large configuration, because this is defining the what we need to specify a number of details that will be used to launch instances.
+So the first one is the AMI ID.
+So I'm going to click on search AMI and I'm going to select the Amazon Linux to AMI.
+So the dialogue looks slightly different than for launch configurations, but it accomplishes the same goal.
+So I'm going to select that so Amazon Linux 2 HVM and then 64 bit x 86.
+So I select that and then click on select AMI now again because these functions in the same way as a launch configuration I'll need to specify the instance type that will be used to launch instances on I'll pick the same as the launch configuration.
+So I'll go with the T3.micro just strolling down to find that there we go T3.micro.
+I can specify a key pair to use to launch instances from, so I'll go ahead and select the key pair that I created at the start of the lesson.
+Network type is either VPC or EC2 classic. Now remember, EC2 classic is the previous generation of networking for EC2. Generally you'll never use this, so I'll be selecting VPC.
+I'll pick a security group to use this template, so I'm going to go with same security group, which is Web SG.
+Remember, that's one that allows HTTP from anywhere and I'll scroll down and there are various other options that you can select.
+So everything that's listed on this diagram we've got security groups, networking configuration, we can set tags and just as with launch configurations, we can expand advanced details I control all the way down and specify some user data.
+So that's what I'm going to do.
+So I'm going to paste in the same user data that I used when I was creating the launch configuration again, it's just going to set it up as a web server.
+Now, these are all the benefits of using a launch template over launch configuration, so you still get to set things like the instance profile to use but then we've got all these enhanced options.
+So elastic graphics, elastic inference, T2 and T3 unlimited, placement group, capacity reservations.
+A lot of these beyond the scope of what you need to know for the solutions architect associate but you should be aware that you can access to a wider range of configuration options if you use a launch template.
+Now, everything else looks good.
+I'm going to go ahead and create the launch template.
+
+Launch Templates are Immutable but they support versioning:
+So that's a launch template created and as with launch configurations, it is an immutable object, so I can't make any changes to it.
+Now because it supports versioning I could create additional versions of this and set the default version, but it is an immutable object you cannot change it after you create it.
+
+Launching an Instance from a Launch Template:
+Now, another benefit of launch templates over launch configurations is I could select the template go to actions and then launch an instance manually but use this template. Now, If I did that, I wouldn't need to select a lot of the instance options that would use if I was doing this manually.
+So I've got the launch template selected.
+I can pick a version of the launch template to use.
+So let's say the default version one.
+I could specify the number of instances that I want to launch.
+In this case.
+It's going to be one instance and the note how most of this is prepopulated, So I don't need to specify the AMI.
+I don't need to specify the instance type.
+I can, if I want, specify a subnet to use, or I can use the default value.
+The security group and key name are prepopulated.
+The storage is configured by default.
+I could just go ahead, accept all these defaults and launch the instance from a template.
+So straight away you can see how, by creating a template, perhaps with your organizational defaults, it makes it really EC2 launch an instance to that standard.
+So without considering any of the auto scaling group aspects of this, you can just use launch templates to define organizational standards, and that is a massive benefit.
+That's something that I've used in production settings, where you've got a certain set of AMIs you might want to use, a certain type of configuration, maybe a certain grouping of tags that define information about what the function of this instance is going to be.
+They can all be defined inside a launch template and you can use that launch template to launch one or more instances.
+So now I've used this to launch an instance, I could go to instances.
+I've got two instances running, but you'll note this one's initializing So this is the one that I've just launched.
+If I select it, copied the address into my clipboard and then open this in a new tab.
+This is what this web server is running.
+So it's got a picture of one of my cats, Winky, and then it's got listed here, dynamically, the public IP address of this instance.
+So that's automatically being created.
+I've used that user data that I pasted into the launch template together with all the predefined settings and used it to launch an EC2 instance.
+
+
+Benefits of using Launch Configurations:
+Now, at this stage, you might not see a lot of the benefits of using launch templates and launch configurations.
+The real benefits from launch templates and launch configurations come from their ability to integrate with auto scaling groups.
+So launch templates and launch configurations define the what, what do you want to launch? In what configuration do you want that thing to be? What automatic configuration? What bootstrapping? What size? What type? What key? What security group? Anything that you think of when you thinking of an instance, that has the word what.
+That is what is defined inside a launch template or a launch configuration.
+
+
+Things to remember for the exam:
+*****So this is the way that I remember it going into the exam, the launch template and launch configuration define the what and then the auto scaling group defines everything else and I'll show you that in the next lesson.
+But from an exam perspective, there are a few things I want you to remember.
+The first is that neither a launch template or launch configuration are able to be changed after you create them.
+They're both immutable, they're static. Once you create them, that's it.
+Now with launch templates you can create new versions, and I just demonstrated that we've got one version, but we could have additional versions of the same template.
+Now, when I demonstrate auto scaling groups in the next lesson you'll see how you can change which template or which large configuration is used for the auto scaling group but for the exam, neither of these can be changed.
+That is really critical to understand.
+**Now you can use launch templates to access all of the new features of all the new instance types, and you can use launch templates to directly launch and EC2 instance, what you can't do is use a launch configuration to directly launch an EC2 instance.
+So I couldn't select actions here and use this to launch an EC2 instance, that's not piece of functionality that launch configurations have.
+So in production you should always preference launch templates, they're newer, you get access to more configuration, and that the only way to access some of the advanced features of the new instances.
+With that being said that is everything I wanted to cover I just wanted to give you a brief introduction of how to use launch templates and launch configurations on exactly what you need to know for the exam.
+Now, in the next lesson, I'm going to be talking about auto scaling groups and it's in that lesson where you'll see the true power of both of these products.
+So go ahead mark this video as complete and when you ready.
+Join me in the next.

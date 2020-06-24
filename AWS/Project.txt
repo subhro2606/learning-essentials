@@ -1,0 +1,73 @@
+
+Food Delivery for Sustainable Living:
+
+Website
+Tired Architecture.
+
+There would be website hosted in EC2 instance where the UI would be hosted.
+All functionalaties in any function would be updated exposed as an API. The API(s) would be making updates to the data.
+
+
+The administrators would buy goods and update stocks."Stocks" would be Stored in a database but the database would hold information related to pricing and dealer information or areas from where stocks were bought and employee bough it.
+**Releasing some stock for cooking would mean, releasing the oldest stock first.
+Any time a stock is released, it will calculate the cost of presevering the goods, based on infrastructure(electricity,fridge,space) required to preserve it like  and update amount. These cost calcualtion would happen based on predefined rules as to how an object is stored. 
+These data would be later analysed to make decisions on when to predict what is the best time to buy goods. 
+
+
+"Menu" made by a dietician should be updated with elabored info of ingridients and amount of raw materails required and the portions it would make & calorific value. There would be clear instruction in english for the process. Also  He/she would have access to the order database. A menu can be cloned and modified. Details related to portions would be stored as well The dietician should supervise the cooking by the cook, so that the food is cooked exaclty like the dietician have made it. 
+
+The menu for the day should be approved by SUPERUSER and stocks to released, which would again update the stock database. 
+
+"Employees" database would stored details of the employees data including details of work experience. There would also be an incentive system based on customer feedback. Employees can give rating to another employee.
+
+Customer database would have every detail of the customer, including food preferences(from an available list of menu, when he/she would like to have it and relevant portions) and enable "Super Diet" or "Ninja Diet". Super Diet would enable customer to specify and conditions/ailments or ambition(like weight loss, body building etc) & relevant information like target weight etc.  They can also Enable "Ninja Diet", which would give option for "Keto"/"Intermittient Fasting etc". 
+Each Customer after ordering something will get incentive which he/she can use in the next order or can gift to the someone. Customer will have the option to buy food for another user to charity.
+**Customer can also create menu and submit it. There should be some sort of intuitive tools that would make it very easy to create a menus. Later project.
+
+Based on all these information profit & loss can be calculated.
+
+
+
+Users:
+    Delivery Managers (DELV)
+    Customers (CC)
+    Administrators (AA)
+    Dietician (DC)
+    Superuser (SUPS)
+    
+Delivery Managers:
+This guys can:
+MKDELV: Make Deliveries and update repository accordingly.
+CNFRMDELV: Confirm Delivery via clicking button on app.
+PLCORDR: Place Order for Customer.
+
+
+
+Administrators:
+SHP: Shop materials update Stocks.
+MKDELV: Make Deliveries and update repository accordingly.
+RLSTCK: Release Stock for Cooking.
+CNFRMDELV: Confirm Delivery.
+PLCORDR: Place Order for Customer.
+
+
+Dietician:
+MAKEMENUS: Make Menus, update relavant amount of raw materails to be used in cooking.
+PLCORDR: Place Order for Customer.
+
+Superusers:
+MAKEMENUS: Make Menus, update relavant amount of raw materails to be used in cooking.
+APRV: Update/Approve Menu by Dietician
+SHP: Shop materials update Stocks.
+MKDELV: Make Deliveries and update repository accordingly.
+CLCTORDR:  Can take optional orders. 
+PLCORDR: Place Order for Customer.
+
+Customers:
+PLCORDR: Place Order.
+CNFRMDELV: Confirm Delivery.
+
+Cooks:
+COOK: Cook cook cook cook.
+PKORDR: Pack Order
+PLCORDR: Place Order for Customer.

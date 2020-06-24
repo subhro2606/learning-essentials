@@ -1,0 +1,76 @@
+
+
+Vertical Scaling:
+Traditional legacy systems use vertical scaling. An attempt is made to forecast demand and purchase servers ideally before the demand passes current capacity. Purchase too early and capacity is wasted. Purchase too late and performance is impacted. 
+
+Horizontal Scaling:
+When horizontal scaling is used (more, smaller servers), capacity can be maintained closer to demand. There is less waste because servers are smaller and there's less risk of performance impact as each increase is less expensive, so it generally requires less approval. 
+
+Elasticity:
+Elasticity, or elastic scaling, is where automation and horizontal scaling are used in conjunction to match capacity with demand. Demand is rarely so linear — it can increase or decrease, often in a rapid and sudden way. An efficient platform should scale OUT and IN, matching demands on that system. 
+Elasticity allows you to achieve maximum cost optimization and also achieve the best performance efficiency. 
+
+
+
+#####################################################################################################################################
+
+Welcome back and in this next lesson, I want to expand upon a previous topic where I covered the different types of scaling available in AWS. 
+In a previous topic I spoke to you briefly about vertical and horizontal scaling, I mentioned that vertical scaling was essentially increasing the size of an individual unit of compute essentially increasing the size of a server. 
+Traditional legacy systems generally utilize vertical scaling. 
+Now, with vertical scaling, we attempt to forecast our demand and we purchase servers ideally before the demand passes the current capacity. 
+So this is actually a graph of what vertical scaling looks likes. 
+So the dotted line is demand, so the demand of a system generally or traditionally has been thought to increase over the lifetime of that system. 
+So it starts off when we first install the system at a relatively low level of demand and then over its lifetime, it increases. 
+Now vertical scaling relies on adjusting the capacity of an existing unit of compute, so a physical or a virtual server. 
+Before virtualization became mainstream. 
+That essentially required increasing the amount CPUs or memory that a physical server had and so it wasn't something that occurred very frequently so there was a mismatch between the demand and the capacity. 
+Essentially, it was a stepped architecture where you purchased servers, ideally, keeping the the supply is close to this level as possible. 
+So with this example, when the system was initially deployed, it had this level of demand and we purchased a little bit of buffer room so we had extra capacity. 
+Now, when you purchase capacity before the demand hits that level, you're essentially wasting business resource because the money that that capacity cost could have been utilized elsewhere. 
+The inverse is that if you delay purchasing capacity for too long, then you're actually impacting performance. 
+So in any situations where the capacity exceeds the demand, you're wasting that capacity. 
+Where capacity is unable to meet demand where you don't purchase enough that can cause business disruption. 
+It can actually lose you customers. 
+So the challenge is when to purchase capacity and how much to purchase and the move from physical service to virtualization improved this because it became much simpler to adjust resources. 
+It's easier to change the CPU memory allocation on a virtual machine that is to install physical hardware. 
+If a server has one CPU then generally you're going to have to purchase at least one more CPU, so you're not able to do granular adjustments to capacity. 
+That's where horizontal scaling adds additional value. 
+By using horizontal scaling, remember, from the previous topic, we're using more smaller servers, so rather interesting the size of a single compute instance, we're adding additional compute instances and instead of using large servers, ideally we'll use a large number of smaller servers and by doing that, it's much easier to add additional servers on a much more frequent basis. 
+By using smaller servers and adding them more frequently we're able to keep closer to this demand line. 
+So we're wasting less resources and causing less disruptions to performance. 
+Now anyone who's deployed architectures knows that best case this is flawed. 
+Absolute best case, when you first deploy a system, there is a surge in demand, so the required capacity initially is fairly high. 
+After that initial surge it will generally reduce to nominal levels. 
+It will increase over time, but instead of being linear, it will increase, it will have spikes, it will decrease the lower levels during off peak periods, and it will bounce up and down. 
+Instead of the straight line, your actual demand will look something like this. 
+Where there's a large amount of variation up and down over time. 
+Now if you've got this level of demands on the dotted white line, then your traditional capacity, which is the orange line, means that there are many periods where you're either wasting capacity, so when your total capacity is above the demand or we're you're actually causing significant disruption. 
+So if you go with this model of capacity using horizontal scaling and you're trying to do your best to increase the capacity as required, you're still going to have periods, maybe sales or busy holiday periods where you're going to have user disruption. 
+To combat this, we've got the concept of elastic capacity or elasticity. 
+Now elasticity or elastic scaling is where you use automation together with horizontal scaling, and use both of those in conjunction to match capacity with demand. 
+Demand is rarely so linear, it can increase and decrease, so based on that, our capacity should also be able to increase and decrease. 
+Traditional models of scaling have stated that demand will only ever increase, and that doesn't represent an efficient use of resources, during an average day, a production system might need three or four or maybe even 15 servers during a peak period but then, during the off hours, it might only need one or two servers. 
+By modeling this on either of the extremes that is either using two servers constantly or 15 service constantly that'll result in inefficient use of resources. 
+You'll either be spending too much or impacting your user experience. 
+Now as you proceed throughout this course you'll be exposed to various different AWS technologies, such as launch templates and launch configurations, auto scaling groups, and other products that have provided as a service. 
+By utilizing these together we're able to scale out and in a system, as demand requires. 
+So as a system enters demanding periods, we can scale out and add additional compute units. 
+As the demand on the system reduces we can scale all the way back down to minimum levels or even in some cases, switch off the compute provision entirely. 
+By utilizing automation together with horizontal scaling we're able to implement elasticity and elasticity is one of the core ways in which you can scale your system effectively. 
+So if you recall in the previous lesson I talked about the well-architected framework. 
+Elasticity allows you to achieve maximum cost optimization and also achieve the best performance efficiency. 
+Elasticity is by far the best way to scale a system in AWS and throughout this course, you'll learn exactly how to implement it effectively. 
+Now again, I just wanted to introduce the theory of this. 
+You're going gain a lot of practical exposure as you proceed throughout this course. 
+Now that is everything that I wanted to cover in this lesson. 
+I want to make sure that you understand the theory of elasticity so that later in the course, when I start talking about auto scaling groups and launch configurations and launch templates, you understand the rationale behind using elasticity and behind choosing horizontal scaling where possible over vertical scaling. 
+I know these two topics have been significantly theory based on we're at the end of that point now. 
+So we're now at the end of this AWS Architecture 101 topic. 
+The next topic is going to be product fundamentals. 
+Where you're going to start getting some experience of AWS products. 
+I'm going to establish two products, specifically AWS CloudFormation which is an AWS automation product, and Amazon S3, which is an object storage system. 
+So you're going to learn all about those two services. 
+You're going to have the ability to experiment with them both in a hands-on lab and once you've done that that's going to conclude the AWS and Solutions Architect Fundamental section of the course. 
+Once you've finished off section one, you're going to be able to move on to section two and beyond, which is where we start looking at some AWS specific products. 
+So from this point onwards, it's going to be a lot more practical and AWS product focused than the course has been so far. 
+So go ahead, mark this video as complete and when you're ready, I'll see you in the next topic of the course, which is product fundamentals.

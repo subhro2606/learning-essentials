@@ -1,0 +1,92 @@
+Service models define how a product or service is delivered, how you pay and what you receive. They also define which part of the product you manage and accept the risks for and which part the vendor is responsible for.
+IaaS: Infrastructure as a Service. Example - DigitalOcean, Linode, Rackspace, AWS EC2, Cisco Metapod, Microsoft Azure, Google Compute Engine (GCE)
+PaaS: Platform as a Service. Example - AWS Elastic Beanstalk, Windows Azure, Heroku, Force.com, Google App Engine, Apache Stratos, OpenShift
+SaaS: Software as a Service. Example - Gmail, Netflix, Google Apps, Dropbox, Salesforce, Cisco WebEx, Concur, GoToMeeting
+FaaS: Function as a Service. Example - Lambda.
+
+
+#####################################################################################################################################
+
+Welcome back and in this lesson, I want to talk to you very briefly about service models as they relate to cloud. 
+As a solutions architect, it's really important that you understand what they are and why they matter. 
+The why they matter is probably the critical part of this lesson. 
+This lesson is entirely theory based but by understanding service models, you'll really start to understand the power of the cloud and how you can utilize AWS and architect solutions that really do deliver value. 
+Now, you've probably actually heard of a few types of service models already. 
+If you haven't realized it, you've definitely used products which are delivered using service models. 
+A few examples of service models are IaaS or i-a-a-s which stands for infrastructure as a service, PaaS or p-a-a-s which is platform as a service, ands-a-a-s or SaaS  which is software as a service. 
+Their service models are important because they inform you how that product is delivered, how you pay for that product, and what you actually receive. 
+They also define which parts you manage. 
+So which parts you're responsible for and which parts are managed another responsibility of the service provider. 
+Let me give you an example. 
+If you've used Netflix before or Amazon Prime TV or HBO streaming or Office365 email, Hotmail, Google Mail they're all SaaS services. 
+What you pay for is a service. 
+You generally pay a monthly fee and you get a service. 
+That might be access to movies and TV shows or access to an email service. 
+What they have in common is that you don't worry about the infrastructure that they run on, the networking which gets that data to you. 
+You just consume it as a service. 
+Why this matters is that within AWS some products are IaaS services, some are PaaS services, and some such as work mail, which is an email product inside AWS are SaaS products. 
+Now I just spoke to you about the shared responsibility model. 
+This is how it relates because for the different types of service models and the products which fall into these models, the areas that you handle and the areas the provider handles are different. 
+Now the subject on the right of your screen now is known as a system stack. 
+Any system that you designed your in your career looks like this. 
+Zoom to a certain level, and every product has a data center. 
+Every product uses networking and storage, hosts and servers, and virtualization in some form. 
+Every product generally has an operating system such as Linux or Windows installed. 
+It uses a runtime, which is how code runs so Python Code uses a runtime, Java script uses a runtime. 
+Every system has an application of some form, and generally there's data involved. 
+So which components do you manage and which are controlled by the provider? Well, that depends on the service model. 
+Remember, every individual product has a service model. 
+
+IaaS:
+Now, with IaaS, it's a pretty even split. 
+An example of an IaaS service is EC2. 
+EC2 is an infrastructure as a service product where you can create virtual servers known as instances inside AWS and you, as the consumer, are responsible for everything above the virtual machine, so I might create an instance inside AWS with a certain set of resources, everything from the operating system up, so Linux or Windows is the operating system. 
+A specific runtime and the applications are installed on the instance, any configuration for those applications and any data that goes inside that instance, that's all my responsibility but anything below the operating systems so the hardware, the data centers, the networking, the virtualization. 
+That's all handled by AWS because EC2 is delivered as an infrastructure as a service product. 
+Now, if you to deploy an application that used a server in traditional infrastructure, you would be responsible for everything in this stack. 
+So you need to manage the data center, the networking, the host, any virtualization, and everything above this line, that's all going to be your responsibility if you're using traditional infrastructure. 
+With an IaaS product, the responsibility is split and why this matters is because the more elements that you don't manage, the less effort is involved. 
+Each of these components in orange show data center, networking, and storage, host and service, and virtualization all have an individual cost both monetary and in terms of the time taken to manage them and the risk that the business has by managing them internally, and if you give those up to AWS then you have significant savings by doing that and that's why infrastructure as a service products are becoming more popular because you actually offset a lot of the management overhead by giving this responsibility to the provider in this case AWS. 
+
+
+PaaS:
+Now, with PaaS or platform as a service, you actually give up a little bit more control. 
+Here you only manage the data and the application. 
+Everything else is managed by the vendor, so the runtime, the operating system, everything below that is handled by AWS for any PaaS products. 
+With PaaS, you might tell a provider that you have an application, maybe something that's written in the node.js programming language and you would give them that code and any data, but the rest they would manage. 
+So you might lose some flexibility because they manage everything in orange but you have so much less admin overhead and risk. 
+Generally PaaS environments are used by developers, but you will get some theoretical and practical exposure later in the course. 
+For now, I just wanted to introduce the concept. 
+
+
+SaaS:
+Now SaaS or software as a service is the service model that most people have some exposure to. 
+If you use Netflix, or if you have your email with Hotmail or Google, then you're already using a SaaS product. 
+Your email is your data. 
+If you move or migrate, for example, into using Google mail, then you might migrate data from an existing system in to Google mail. 
+If you choose to move away from Google mail then the data is the only thing that you need to manage and export away from that service. 
+Everything else is handled by Google. 
+With Netflix, you don't have to worry about the infrastructure. 
+Your data in this case might be just the TV shows and the movies that you choose to like, any playlists that you create those are your responsibility. 
+Everything else for Netflix is handled by Netflix. 
+You only need to worry about your data and how you structure and configure that data inside the application. 
+Now, SaaS products are generally very low maintenance, but the trade off for that is that they're also fairly inflexible. 
+You're going to rely on the vendor to add features and to control performance. 
+You generally don't have any involvement with the infrastructure supporting a SaaS application, so you can't really just adjust these individual components to get better performance. 
+You're almost entirely reliant on the vendor. 
+
+
+
+FaaS:
+Now there are other service models that you'll come across while taking this course, such as FaaS or function as a service. 
+This is fairly comparable to platform as a service, but with FaaS you don't even provide a full application. 
+You provide a single function, and you're only ever billed when that function is executing. 
+An example as a function as a service product, inside a AWS is AWS Lambda, and we'll be covering that in detail, both in terms of the product and how to use it so the architecture of systems that use Lambda later in the course. 
+What I want you to understand from this lesson is, why does this really matter? For an architect, it's essential that you select the right product and the right service model when you're choosing products that are used inside a project. 
+When you're decided on an email product, for example, as part for major project, do you pick something that uses an IaaS model so infrastructures of service such as Microsoft Exchange where you need to actually deploy and manage the servers or do you something like Officer 365 which is a SaaS product. 
+So it's delivered a service. 
+The implications for the business are huge and understanding each of the individual service models as well as how they compare will really help you stand out as a solutions architect. 
+As we move through the course, I'll be referring back to this constantly, which is why I wanted to introduce it at the start. 
+Don't worry if you don't understand it completely at this stage, as you do move through the course, it will all become super clear. 
+For now that's enough, I just wanted you to be across this at a high level. 
+So go ahead, mark this lesson as complete and when you're ready, move onto the next where I'm going to be discussing the differences between high availability and fault tolerance. 

@@ -1,0 +1,153 @@
+Public EC2 Instance:
+Public EC2 instances apart from having the same private addressing in Private Instances receive an IPv4 public IP address and the subnet it's located in has a route to the Internet Gateway configured for traffics outside the VPC. This public IPv4 address can be referred to from the Internet.
+
+Internet Gateway:
+This public IPv4 address is not configured on the Operating System.
+Every time any device is inside AWS are given public IP addresses; when a device that has an associated public IP address attempts to communicate with the internet or when any internet devices attempt to communicate with its public IP address the job of internet gateway swap those IP addresses. 
+The internet gateway actually uses a process called NAT or network address translation. It translates a private IP to a public and a public IP to a private. 
+So if the instance which doesn't have a public IP address on the operating system attempts to do let's say a ping to the internet so I ping 1.1.1.1 what will happen is this internet gateway will receive data from this private IP address and it will swap that private IP address for this public IP address. So when 1.1.1.1 receives the traffic, it will see it as from this IP address. The same process is true in reverse. 
+Exam Tips:
+•	You might get a question where an EC2 instance cannot reach any machines on the public internet or any machines on the public internet can't reach your EC2 instance and one of the answers might be you need to apply a public IP address on the guest operating system, and that is not a valid way to fix the problem. 
+•	You cannot apply a public IP address on any operating system inside AWS. 
+•	Everything in AWS is natively private when using IPv4 and it's the job of the internet gateway to translate that using a process called NAT or network address translation. It translates a private IP to a public and a public IP to a private. 
+Public DNS:
+•	Along with the public IP address EC2 instances also receive a public DNS name.
+•	If we attempt to ping the public DNS from the public internet, it resolves to the public IP address. 
+•	If we attempt to ping the public DNS from within the VPC, it resolves to the private IP address.
+•	This means that you can use the same DNS name, whether you're in the VPC or on the public internet and it will always talk to the best IP address of that EC2 instance whether it's private or public. 
+Dynamic IPv4 Address:
+•	Public IP address of an EC2 instance of the public IPv4 address doesn't change when you reboot an instance. 
+•	But If we are using dynamic IP address, every time the instance is stopped the public IPv4 address is deallocated from the instances, so dynamic IPv4 addresses change. They change when the instance moves between EC2 hosts when it stopped and when it started. 
+•	So when the instance is stopped, the IP address, the public dynamic IP version four address, is deallocated from the instance. 
+•	When the instance is started again, a new public IP address will be associated to a brand new public address but in addition, because the public DNS is based on that IP address, the instance will also get a brand new public DNS as well. 
+•	By default all public IP version four IP addresses that could be associated with EC2 are dynamic. 
+•	They change if the instance is stopped and started, or if the EC2 host that in instance is running on changes. 
+Elastic IP Address:
+•	Elastic IP addresses these are IP addresses that are valid for the entire AWS region. So it's not an availability zone specific thing. 
+•	AWS have a pool of these elastic IP addresses and the first thing that you need to do is to allocate a new address with your account in this region.
+•	You can then associate this elastic IP with a private IP address on that EC2 instance or ENI. So you're creating a link between the private address and this elastic IP address. 
+•	Remember, that the public IPv4 address doesn't change. 
+•	With elastic IP address with an EC2 instance, what happens is any existing dynamic or changeable IP addressing is removed so it loses that existing public address. In its place, the static elastic IP is added. So we get new public DNS name which matches this Elastic IP address.
+•	Unlike the previous dynamic IP address, the Elastic IP Address & the DNS associated is valid for life time of the instance. 
+
+IPv6 Addresses:
+IPv4 is limited and it's actually running out of public IP addresses, which is why we generally use private ranges for most things. 
+IPv6 was designed to fix that shortage and so all IP version six addresses inside AWS are public. 
+You don't pick which addresses you want to use they're allocated by AWS but if your VPC is enabled for IPv6 and your subnet is enabled for IPv6.
+
+
+
+
+
+###################################################################################################################################
+Welcome back. 
+This is part two of this video. 
+We're going to carry on immediately from the end of part one. 
+So let's get started. 
+So I select the public instance and I want to draw your attention to a number of things. 
+So just to confirm this instance, even though it is public, has the same private addressing. 
+We've got the same private IP address and the same private DNS name and both of those behave in exactly the same way as a private instance. 
+Now in addition to this private addressing, public instances receive an IP version four public IP address. 
+This is a publicly routable IP address that provided you don't have any security restrictions in place, you'll be able to reach from your machine traversing over the public internet and you can connect to this over SSH for example and if you connect over SHH you're able to access the shell of the instance and we've done that in previous lessons. 
+So I'm going to demonstrate this I'm going to right click. 
+I'm going to go to connect, and this will list the command to fix up the permissions as well is to connect to the instance if I was doing this from Windows at need to follow the PuTTY instructions but I'm not, I'm using a Mac OS machine. 
+So first I need to fix the permissions and then connect to the instance. 
+So I'm going to do that. 
+I copy this command in first. 
+I'll move to my terminal, fix up the permissions on this PEM file. 
+Once they're fixed I'll copy the connection command for the instance, move back over, and connect using SSH. 
+As always, I'll need to verify the authenticity of the host once I have done so I'll be connected to the EC2 instance. 
+Now, what I want to point out is a really critical part about EC2 networking because this is a Linux machine I'm able to run the ifconfig command to display an overview of the network interfaces inside the guest operating system. 
+So I'm being very careful with the language. 
+This command will list the configuration of the network interfaces as far as the operating system is aware. 
+What I want to draw your attention to is how in none of this output, the external IP address of the EC2 instance is listed. 
+As far as this EC2 instance is concerned, it does not have a public IP address. 
+It only has this private IP address of the 17.163 and if we move back to the console, we'll see that this is the private IP address of this instance but it doesn't have this public IP address. 
+The way that this works and I'll be detailed in this more in section four of the course but there is a networking device known as an internet gateway. 
+Its job is to be told when any device is inside AWS a given public IP addresses and when a device that has an associated public IP address attempts to communicate with the internet or when any internet devices attempt to communicate with its public IP address its job is to swap those IP addresses. 
+So if this instance which doesn't have a public IP address on the operating system attempts to do let's say a ping to the internet so I ping 1.1.1.1 what will happen is this internet gateway will receive data from this private IP address and it will swap that private IP address for this public IP address. 
+So when 1.1.1.1 receives the traffic, it will see it as from this IP address. 
+The same process is true in reverse. 
+When I connect to this instance over SSH, I connect to this IP address. 
+The job of the internet gateway is to swap this IP address with the private IP address, which is what allows my SSH connection to reach the EC2 instance. 
+Now, why am I making a point of telling you this? You might get a question where an EC2 instance cannot reach any machines on the public internet or any machines on the public internet can't reach your EC2 instance and one of the answers might be you need to apply a public IP address on the guest operating system, and that is not a valid way to fix the problem. 
+You cannot apply a public IP address on any operating system inside AWS. 
+That's not how it works. 
+Everything in AWS is natively private when using IP version four and it's the job of the internet gateway to translate that. 
+So that's critical to understand. 
+The internet gateway actually uses a process called NAT or network address translation. 
+It translates a private IP to a public and a public IP to a private. 
+Now, as well as this public IP address EC2 instances also receive a public DNS name and this behaves in a really interesting way. 
+I want demonstrate that. 
+If you take that public DNS name and I'll go back to this EC2 instance. 
+So this EC2 instance is inside this VPC. 
+If I ping that public DNS name, note that I get a private IP address the private IP address of the EC2 instance. 
+So I want to cancel that process and I'm going to exit out to the local shell of my machine and I'm going to do that same process. 
+I'm going to ping this public DNS name. 
+This time when a ping that address, even though it's timing out and that's fine because I don't have the necessary rules in the security group but note that it resolves to the public IP address. 
+So this is a key way that this public DNS works. 
+If you attempt to ping it from the public internet, it resolves to the public IP address. 
+If you attempt to ping it from with inside the VPC, it resolves to the private IP address and that means that you can use the same DNS name, whether you're in the VPC or on the public internet and it will always talk to the best IP address of that EC2 instance whether it's private or public. 
+Now, the way that this public IP address behave use is different than the private address and I want to demonstrate that. 
+So the current IP address this instance has is 18.215.143.126. 
+I'm going to go ahead and I'm going to restart this instance. 
+So I'll go to instance state and then reboot. 
+Now that will only take a couple of seconds but when I reboot the instance from the console, the IP address won't change. 
+So this is critical to remember the public IP address of an EC2 instance of the public IP version four address doesn't change when you reboot an instance but what happens if I go to instance state and then stop? Is that this public IP address is deallocated from this EC2 instance, EC2 instances can have two different types of public IP version four addresses. 
+They can have what are known as dynamic addresses and dynamic addresses change. 
+They change when the instance moves between EC2 hosts when it stopped and when it started. 
+So when the instance is stopped, the IP address, the public dynamic IP version four address, is deallocated from the instance. 
+So there we go both the public IP version four address and the DNS address have vanished. 
+Now when I do the reverse I want go to instantcestate and start what will happen is a new public IP address will be associated to a brand new public address but in addition, because the public DNS is based on that IP address, the instance will also get a brand new public DNS. 
+So that is really important to understand. 
+By default all public IP version four IP addresses that could be associated with EC2 are dynamic. 
+They change if the instance is stopped and started, or if the EC2 host that in instance is running on changes. 
+
+
+
+
+
+
+Elastic IP Addresses:
+Now there is another type of public IP version four address that could be associate it with EC2 instances and that's known as elastic IP addresses. 
+With elastic IP addresses these are IP addresses that are valid for the entire AWS region. 
+So it's not an availability zone specific thing. 
+AWS have a pool of these elastic IP addresses and the first thing that you need to do is to allocate a new address with your account and you can do that by clicking allocate new address. 
+Now it is possible to associate your own IP addresses with your AWS account but for this demonstration, I'm just going to pick the Amazon pool. 
+So I select that and then click on allocate. 
+Now that will result in an elastic IP address being allocated with my AWS account in this region, it's important because if you don't associate this address with a resource, you're actually charged for it. 
+So the more on allocated elastic IP addresses you have in your account the more cost associated because public IP addresses are in short supply AWS don't want you to waste them and so if you're not using them, you can go to actions and then release IP addresses. 
+So releasing it just moves it out of the pool allocated to your account and moves it back into the general AWS pool for that region. 
+So I'm going to go ahead and allocate another IP address once I've got an elastic IP address. 
+I'm able to associate this address with another resource in this case and EC2 instance. 
+So I'm going to go ahead and select the EC2 instance, the public instance that  I was just demoing a moment ago and then I associate this elastic IP with a private IP address on that EC2 instance so that architecture is critical to understand when you're associating elastic IP addresses what you're actually doing is matching it up with the private address. 
+Remember, that doesn't change. 
+So you're creating a link between the private address and this elastic IP address. 
+I'm going to go ahead and associate that now when you associate on elastic IP address with an EC2 instance, what happens is any existing dynamic or changeable IP addressing is removed so it loses that existing public address. 
+In its place, the static elastic IP is added and that's what this is 3.211.112.173 is the elastic IP address. 
+We get a new public DNS name which matches this IP address and unlike the previous IP address that we had, this one is with this instance for its life time. 
+So I can stop and start this instance I can restart it whatever I do this IP address will be with this instance for its lifetime. 
+I can, though move this elastic IP address between instances. 
+So if I wanted to have a consistent IP address for my application so users could connect to this specific IP address or this specific DNS name, then I could take that IP address a map it to another instance, maybe I was doing an upgrade. 
+Maybe I was dealing with a fault, and I wanted to take a new AMI make a new instance and associate this elastic IP with this new instance. 
+Well, I could do with that elastic IP addresses are separate entities. 
+They could be moved between resources so moved between EC2 instances. 
+Now, if I remove this elastic IP from this EC2 instance, I'll go ahead and do that now I'll pick the elastic IP. 
+I'll disassociate that address with this instance. 
+Once I've done that, I'll release it from the account, so I'm not being charged for it but what happens when I do that if I go back to instances, is because this instance is a public instance, it has a public IP. 
+When I added the elastic IP, it removed the existing public IP when I removed the elastic IP, it adds an additional IP and this is another dynamic IP address. 
+So this IP address will change now if I stop and start the instance. 
+So whenever you add an elastic IP to an instance it replaces its existing IP. 
+When you remove it, It's given a new, dynamic public IP not the same one a brand new IP address. 
+So with public instances, you've got the private addresses which never change .You've got the private DNS which never changes and that's the same as with private instances. 
+In addition, you've got the normal type of public IP address, which can change whenever the instance is stopped and started and associated DNS name that can change also whenever the instance is stopped and started and you've got the option for an IP version four elastic IP address which is a static address which never changes. 
+Now there is another type of IP address and that's known as IP version six. 
+I'm going to talk about that more in the networking section of the course it's the new version of IP version four which is what I've been demonstrating so far. 
+IP version four is limited and it's actually running out of public IP addresses, which is why we generally use private ranges for most things. 
+IP version six was designed to fix that shortage and so all IP version six addresses inside AWS are public. 
+You don't pick which addresses you want to use they're allocated by AWS but if your VPC is enabled for IP version six and your subnet is enabled for IP version six these are both things we'll cover in the networking section, then your instance, will be allocated an IP version six address at launch and it'll keep that until terminated. 
+It doesn't though getting IP version six DNS name. 
+So these are all things that we're going to cover extensively throughout the course and especially in the networking section. 
+So don't worry if any of this is a bit unfamiliar, I will make sure that by the end of the course it's all second nature that you know exactly how this works end to end and can answer any questions that you get in the exam. 
+So that's everything that I wanted to cover about IP addressing and DNS as far as EC2 instances are concerned. 
+So go ahead mark this lesson as complete and when you're ready, move on to the next.

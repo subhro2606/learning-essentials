@@ -1,0 +1,111 @@
+Private Instance:
+A private instance can be in the VPC, which have public connectivity only it's not given a public IP address or it's in a subnet that's not configured to be publicly accessible. 
+This can be done by changing "Auto-assign Public IP" to "disable".
+ENI:
+By default, any instance created by EC2 starts off with a default ENI or elastic network interface. We can have multiple network interfaces.
+
+Private IP Addresses:
+•	So this is the network interface card, or virtual network interface card that the instance starts with and when you launch any instance into EC2 with an elastic network interface, it's going to be allocated an IP address within the range that the subnet uses. It's known as a private IP address. 
+•	Private IP Address is not routable across the public internet. 
+•	Private IP Address is associated with the instance for the lifetime of that instance, so it stays the same. So if we stop an instance & restart it, the Private IP address remains same.
+•	The default network interface that's associated with an EC2 instance is known as eth0. 
+•	We can have one primary & more than one secondary Private IP addresses associated with an ENI and the number of secondary private IP Address depends on the size of the instance. 
+Private DNS Name:
+•	Private instances have internal only DNS name,  known as private DNS name. 
+•	Private DNS Name has got the private IP address built into it. So its ip- and then the IP address but instead of dots, it has dashes. 
+•	If the IP address were to ever change this internal DNS name would also change. It's based on the private IP address, but because the private IP address belongs lifetime of the private instance, so does this internal only DNS name. 
+•	Private DNS name can't be pinged externally. 
+•	It only works inside the VPC, and it always resolves to the private IP address of the EC2 instance.
+For Example:
+•	Private DNS: ip-172-31-52-57.ec2.internal
+•	Private IPs: 172.31.52.57
+
+
+###################################################################################################################################
+Welcome back, and in this lesson, I'll be talking about some basic EC2 networking. 
+Now, don't worry if you find any of this difficult if you've got no existing networking experience, we've got a whole section on AWS networking coming up next that will give you plenty of exposure to the different AWS networking components. 
+This lesson I just want to focus on some simple networking and how it effects EC2. 
+Now throughout this lesson, I'm going to be using two terms, which I haven't really covered yet. 
+So this might well be the first time you've heard either of these terms. 
+
+
+Public Instance: 
+The first is public instance and by public instance I mean an EC2 instance, which has been given a public IP address and it's inside a VPC, which contains any networking required to make that public IP address work. 
+So, in effect, an instance that you can connect to from the public internet. 
+The second term is private instance and a private instance is one that can only be communicated with inside a VPC. 
+So that's one without any public internet connectivity. 
+Private Instance:
+A private instance can be in the VPC, which does have public connectivity only it's not given a public IP address or it's in a subnet is not configured to be publicly accessible. 
+Now they may be terms that I've not covered yet, but don't worry for this particular lesson, when I talk about a private instance, I want you to think about an instance that simply is not available from the public internet. 
+When I talk about a public instance, it's one that is, you don't really need to focus on the networking intricacies to understand that we'll be covering all of that in section four of the course. 
+So let's start with private instances. 
+
+
+Private Instance:
+So in this case, we've got this private instance it's got a private IP address, and it's got a single attached network interface or ENI. 
+So let's go ahead and create that inside this AWS environment. 
+Now this is a Sandbox AWS account provided by Linux Academy, and all I've done so far is to create a default VPC, which you have seen earlier in the course I've just gone into your VPCs and then go to actions, create default VPC. 
+I've already got that created. 
+It's the one that's 172.31.0.0 and it's listed as the default VPC. 
+So that's all I've done have gone actions and then create default VPC. 
+Now, I'm going to create an EC2 instance inside that default VPC. 
+I'm going to launch instance it's going to be Amazon Linux 2 and, as always, T3.micro but when I go to configure instance details, I'm going to make sure it's in this default VPC but 
+I'm going to change the auto assign public IP address from use subnet setting enable to disable. 
+This is going to make it a private instance. 
+It's not going to have any public connectivity. 
+I'll leave everything else as defaults so I'll go to next add storage, I'll accept the default storage recommendations. 
+This is based on the AMI that I have used so it's an 8 GB GP2 volume. 
+I go to next tags, I'll add a tag, the key will be name, and then for the value. 
+I'm just going to call it private instance. 
+Configure security group. 
+I'll just accept the defaults at this point because I'm not going to connect to this in any way. 
+I'll launch the instance, I'll choose to proceed without a key pair, because again, I won't be connecting to this instance at all. 
+
+It's private, so I won't be able to do that and then I'll view instance Now, by default, any instance created by EC2 is going to start off with a default ENI or elastic network interface. 
+So this is the network interface card, or virtual network interface card that the instance starts with and when you launch any instance into EC2 with an elastic network interface, it's going to be allocated an IP address within the range that the subnet uses. 
+So this particular instance is located in U.S. East 1c and it's located in this particular subnet that has an IP address range associated with it. 
+The instance as I launch it into that subnet is going to be given a private IP address, so this is an IP address that I can't connect to over the public internet. 
+It's known as a private IP address. 
+It's not one that's routable across the public internet. 
+Now this IP address is associated with the instance for the lifetime of that instance, so it stays the same. 
+Note that it's currently 172.31.28.6. 
+If I stop the instance so go to instance state and then stop the IP is going to remain associated with this instance so note that even though it's going through this stopping state and it will finally move to a stopped state that IP address will stay associated with EC2 instance or rather the network card that's associated with the EC2 instance. 
+So private IP addresses inside AWS, they don't change they're static for the lifetime of the EC2 instance. 
+So after a couple of refreshes, we can see that it's now in a stop state. 
+The private IP addresses still associated with it, and if I start that instance up again, it will still have that same IP address. 
+Now the default network interface that's associated with an EC2 instance is known as eth0. 
+If I click on eth0 of this particular instance, I'll be presented with the interface ID. 
+So the ENI elastic network interface ID for this network interface. 
+If I open that, I could go to manage IP addresses so I could click on Assign New IP Address and then update and that would result in another private IP address being assigned to this network interface. I could try that process again, assign a new IP address, click update again. This time, though, there would be an error because for this particular size and type of instance, we're only allowed to have two private IP addresses associated with it. 
+That is something that differs based on the size of the instance. 
+So be aware of that. 
+That's something else that could be influenced by your instance selection. 
+So unassign that additional private IP address, I can update it again and that'll deallocate it. 
+So I'm able to have multiple private IP addresses associated with the networking interface and I could also have multiple network interfaces, but that something we'll cover later on in the course. 
+Now, we also have for private instances is a private DNS name. 
+So this is an internal only DNS name. 
+You'll note that it's got the IP address built into it. 
+So its IP- and then the IP address but instead of dots, it has dashes. 
+If the IP address were to ever change this internal DNS name would also change. 
+It's based on the IP address, but because the IP address belongs to this instance for the lifetime of the instance, so does this internal only DNS name. 
+I'm not able to ping this externally. 
+It only works inside the VPC, and it always resolves to the private IP address of the EC2 instance, so I'm going to go ahead and terminate this instance. 
+So I'll go to instance state and terminate and that will result in the IP address this private IP being deallocated from this instance and return to the pool. 
+So next I want to talk about public instances. 
+So instances that have a public IP address and are accessible from the public internet. 
+Now, public instances share the same private addressing as private instances. 
+So they have the private IP and private DNS but they also have public variants. 
+Let's have a look at what that looks like. 
+So I'm going to launch another instance again, I'll be picking Amazon Linux two same size of instance so T3.micro. 
+This time, I'll make sure that the IP address setting is used subnet setting enabled that will make sure that it's given a public IP address and then from that point I'll follow the same process that I did for the private instance. 
+So add storage, add tags. 
+I will add a tag again name and then public instance configure security group. 
+This time I will create a new security group and I'll name it IP demo so that for the name and the description and I'll make sure the SSH is opened from my IP address. 
+So I'm able to connect to this instance. 
+Go to review and launch. 
+Launch it and I'll need to select a key pair, so I'm going to create a new key pair. 
+Call this IP demo, download it to my local machine, and once I've done that, I'll launch the instance. 
+Now this lesson is getting a little bit on the long side. 
+So I wanted to split it into a number of different parts and give you the opportunity to take a small break. 
+So this is the end of part one. 
+Go ahead and mark this lesson as complete and when you're ready, you can join me in part two.

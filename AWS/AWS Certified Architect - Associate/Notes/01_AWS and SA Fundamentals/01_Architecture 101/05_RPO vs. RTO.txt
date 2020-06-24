@@ -1,0 +1,58 @@
+RPO(Recovery Point Objective): How much loss a business can endure expressed in time. The maximum time between a failure and last succesful backup. RPO can be lowered by increasing the frequency of backups.
+RTO(Recovery Time Objective): The maximum amount of time a system can be down. How long a solution takes to recover. Lowering the RTO essentially means
+improving the speed at which you can affect quick and efficient recovery. 
+
+#####################################################################################################################################
+Welcome back, and in this lesson we're going to cover disaster recovery specifically two parts of that which are your recovery point objectives or RPOs and recovery time objectives or RTOs. 
+Now, both of these terms come up extensively in the exam and if you need to design systems using AWS for real world usage, you really do need to have an extensive understanding of both of these terms and how they relate to AWS products but at this stage, you only need that high level awareness. 
+Don't let the complicated names put you off. 
+I'm going to be covering for every product inside AWS any applicable RPO or RTO considerations. 
+At this point, I just want to introduce the terms and make sure you're aware of exactly what they mean. 
+Now let's look at this through an example. 
+Let's say that you've been asked to manage a busy online store. 
+They think about what this means for a minute. 
+On one side you got a website which receives customers logging into that website and making orders at the other side, you've got a stock an orders database, which stores details of all of the confirmed orders that have been made. 
+Imagine that this store runs on a 24/7 basis and that you run backups of this store once per day at 11 p.m. 
+For now, let's also assume that they work properly 100% of the time, which isn't always the case. 
+Now, let's say that one morning at 4 a.m., you have a major failure. 
+Let's say the data center running this application explodes. 
+I know this is an extreme example but it illustrates things really well. 
+Now there are two things that you need to be immediately worried about. 
+The first is that you need to get the system back up and running, and this is what the recovery time objective is. 
+The recovery time objective is the maximum amount of time a system can be down. 
+Looking at that from another perspective, how long a solution takes to recover from the point of a disaster to the point of when everything's up and running again. 
+Now, in some cases, the business will tell you the RTO value that they want. 
+In some cases, you will inform the business of what RTO value a system has, based on how quickly you can recover it. 
+The second thing you need to worry about is how much data you've lost or how much loss the business can tolerate remember so far in this example, I mentioned how backups occur once a day 11 p.m. 
+and in this case, the disaster occurred at 4 a.m. 
+So you've lost five hours of data an RPO five hours but this is actually a relatively nice example. 
+It could have been much worse. 
+This disaster could have occurred at 10 p.m. 
+and if it occurred at 10 p.m. 
+remember that you're doing your backups at 11 p.m. 
+daily. 
+So in that case, you could have lost up to 23 hours of data. 
+Ideally, you want to keep both the RPO and RTO as low as possible but doing so will generally increase your costs. 
+Lower these values, the more extreme the costs. 
+For example, you might want to lower the RPO or recovery point objective by increasing the frequency of backups to one back up every hour. 
+That way, assuming your backups always work the most that you could ever lose would be one hour. 
+You could increase that and do backups every minute, giving you a one minute RPO. 
+With this simple example, more backups is more costly and so lower in the RPO costs more. 
+Now your business might mandate really low RPO levels. 
+Your job as a solutions architect is to design systems that meet those objectives. 
+So be aware of what RPO means lowering the RTO essentially means improving the speed at which you can affect quick and efficient recovery. 
+If it's a hardware fault, you'll need new hardware. 
+If it's a building fire, you'll need a new building, and you're always going to be limited to how quickly you can obtain both of those things. 
+One option is that you have on site spare hardware or a secondary site that you can move to if your primary fails for whatever reason and both of those carry additional expense. 
+If you're instance inside AWS has become corrupt, you might need to recover it, maybe reinstall your application. 
+All of that takes time and don't forget the people component. 
+Are they on call? Do they have the necessary documentation and system logins? Can they easily get to the recovery location? If you're using AWS, do your staff have good, solid internet connections from their remote shacks in the middle of the forest while they're currently on holiday? RPO and RTO can be lowered, it costs money, and it needs advance planning but it's a technical and a business process but why does this matter to you? Well, if you're architecting systems, you need to be aware of how we're to recover them, how long it takes, how much data loss will occur. 
+If your business needs a 20 minute RTO and I am using a database as a service product, which takes 40 minutes to provision, you're already breaching your business requirements. 
+To be an effective solutions architect, you need to understand what it is that you're designing. 
+It's technical and business needs. 
+You need to make sure that you choose the right products and services which meet those needs. 
+This course is going to cover this in depth, but at this stage I just want you to be aware of these terms so that when I talk about the RTO RPO various AWS products, you'll be aware of where this fits in that you will be tested on this in the exam, you might face a scenario where you're given a certain set of RTO and RPO requirements and you have to give a product selection which will meet both of those. 
+So pay attention as we proceed throughout the course because I will be talking about specific product RPO and RTO values as we go. 
+I'm not going to go into any more depth at this stage. 
+As a topic this is just introducing things and I want to practically demonstrate these concepts later as we go through the course. 
+For now, go ahead and complete this video, and in the next one, we're going to be talking about scaling architectures.

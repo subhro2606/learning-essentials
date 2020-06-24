@@ -1,0 +1,234 @@
+AMIs (Amazon Machine Images) an object or container, and it allows you to launch EC2 instances. They store snapshots of EBS volumes, permissions, and a block device mapping, which configures how the instance OS sees the attached volumes. AMIs can be shared, free, or paid and can be copied to other AWS regions. 
+
+Types:
+Instance Store Backed AMIs: These are used when root volume of the Instance doesn't use EBS.
+EBS Backed AMIs:  These are used when root volume of the Instance  use EBS.
+
+They store snapshots of EBS volumes, permissions, and a block device mapping, which configures how the instance OS sees the attached volumes.
+
+EBS Volumes:
+Generally in most cases in Production you create an AMI based on a source instance. 
+That means you've provisioned the instance, selected operating system, performed any OS level configuration, added any data or application volumes that you require, installed your application, copied in your data, and performed any application configuration and once you've got the instance into a state when it's ready to go from that, you'll create an AMI. 
+AMI contains the necessary configurations required launch a new instance and these configurations are based off the existing instance, you are creating the AMI form. So because your source instance has EBS volumes, so while creating an AMI, it would create snapshots of the EBS attached to the instance and reference those within its configuration. 
+
+Block Device Mapping:
+Every operating system, whether it uses directly attached or network attached storage, uses what are known as device IDs, which are the unique identifier for the device and it's how your Windows or Linux operating system, knows to mount a particular drive or a particular volume. 
+So because this AMI has snapshots of these original EBS volumes, the block device mapping essentially stores a link between the snapshots and how they're mapped to the new instance. 
+It's a list of all of the volumes that are attached to this source instance, together with their device ID. 
+So when you launch that instance, it'll go ahead and create new volumes, and it will know how to map them to the instance so they're accessible to the guest operating system. 
+You are able to add additional volumes to this AMI but generally you're creating it in AMI to be in exactly the same state as the source instance. 
+
+Lauch Permissions:
+These are related who can use your AMI to launch instances. 
+Private:
+It defaults to private, which means only the owning account. 
+So my account can access and use this AMI. 
+Public:
+I can change it to public, which means that every AWS account will be able to freely search for this AMI and launch instances from it.
+White List Specific Account to Access AMI(s):
+You can use a middle ground which is set to private but with individual AWS accounts white listed so that they can use this AMI to launch instances. 
+So at this point, because the AMI is created, what I can do is go back to instances. 
+
+
+
+Use Cases:
+AMI baking or AMI prebaking:
+Suppose we create an instance and do configurations(install apache server, download necessary code from repository etc) on it to host a website, which takes 30 mins. By creating an AMI with all that work on upfront, it saves us that 30 minutes every time we deploy it and architecturally, that's known as AMI baking or AMI prebaking. 
+You essentially do the work in advance. You do all of the extensive installation and configuration and then you prebake that into an AMI. It can save you significant time if you needed to deploy hundreds or thousands of the same application. 
+Immutable architecture:
+Immutable architecture is a technique where servers, in this case EC2 instances, are never modified after they're created. 
+Imagine that we have a corruption in the website hosted in that instance, so rather than connecting to it, performing diagnostics, fixing it, and hopefully getting it back into a working state. We could just terminate the instance and provision a brand new one from this known working AMI. If something breaks, you delete it and create an identical version of that thing. Immutable architecture generally means that once provisioned, things don't change. 
+If you want to make a change, you make a different AMI a version two and you deploy that new version of that AMI. AMI s are generally used either to perform base installations or when you're using an immutable architecture. 
+Generally, organizations have processes that every time they release a new version of their application, they create a brand new AMI with that new application version prebaked into it and it just means that whenever they need to deploy that application, it's in a known working state. 
+That's immutability. 
+You don't change it afterwards, you don't adjust things. 
+You create a new version. 
+You test that new version and then you use AMI to deploy across your entire infrastructure. 
+Immutability is a great way of ensuring a perfect clean infrastructure, which is free of bugs. 
+
+High Availablity:
+Now AMIs can also be used for scaling or high availability. You can scale using auto scaling groups and these could be used to deploy and scale EC2 instances based on load, and you can utilize AMIs to deploy new instances using a prebuilt application that stored inside the AMI. So it saves time when you're provisioning instances. 
+
+
+
+Places to not use AMIs:
+With AMIs, the config is built in. 
+It's not something that you can really customize based on things like instance size or availability zone or subnet or IP address. 
+That's where bootstrapping comes in handy. 
+Bootstrapping is when we use the user data to build an EC2 instance. 
+So remember, if I go to launch an instance, I select an operating system, select a particular instance type, and then go to configure instance details. 
+If I use the advance details dropdown we've got this user data section. 
+This is how we can paste in instructions to the EC2 instance using this is known as bootstrapping and bootstrapping comes in handy because it addresses some of the limitations of using AMIs and bootstrapping is going to be the topic that we cover in the next lesson. 
+So go ahead, mark this one as complete and when you're ready, join me in the next.
+
+######################################################################################################
+
+Welcome back and welcome to the first lesson of the EC2 intermediate topic of the course. 
+In this lesson I want to cover AMIs known as Amazon machine images or AMIs. 
+An AMI is an object or container, and it allows you to launch EC2 instances. 
+I've introduced them earlier in the course as build images like installation media for operating systems and while this is true, it's useful to know how it works in more detail for real world usage and the exam. 
+Throughout this lesson I'm going to be quickly demonstrating how AMIs are created and how they're interacted with but before I do that, I want to draw your attention to the fact that there are, in fact, two different types of AMIs. 
+
+
+Instance Store backed AMIs:
+The first type is instance store backed AMIs and these are used when the root volume of the instance doesn't use EBS. 
+Now they're pretty rare these days, and you tend not to experience them in production real world usage. 
+The second type of AMI are EBS backed AMIs and these are used when the root volume of the source instance does use EBS. 
+For this lesson, I'm going to be sticking to EBS backed AMIs because recent exam refreshes tend not to include any questions about instance store back AMIs together with the fact that in production usage you tend not to experience them because they're only used with older generation instances. 
+It's probably not worth covering them in this course. 
+
+
+EBS Backed AMIs:
+So in this lesson we're going to stick entirely EBS backed AMIs. 
+Now when you're creating an AMI you're creating it generally from an existing EC2 instance. 
+So to demonstrate this, I'm going to first create an EC2 instance. 
+So I'm going to skip through this fairly quickly because you should be used to it by now. 
+I'm going to create an EC2 instance. 
+So I'll go to launch instance, Amazon Linux two, we'll pick the same type of instance have been using before this so T3.micro. 
+I'm going to use some user data for this instance and this is contained in the lesson files for this lesson. 
+So I'll be copying the contents of the user data one text file. 
+So I'll copy that into this box everything else looks good. 
+It's in the default VPC and the default subnet and it does have a public IP I'll go to next add storage because it's Amazon Linux two the default of 8 GB of GP2 will be fine. 
+I'll go to next tags, go to Configure Security Group. 
+I'll be creating a new security group. 
+We'll call this one AMI demo and the same for description. 
+I'll add an additional rule because this server is going to be running a web server so I'll select HTTP. 
+I'll change both of these to my IP address to make it a little bit more secure. 
+Go to review and launch, go to launch, and I won't need to connect to this instance, so I'll proceed without a key pair. 
+I acknowledge it. 
+Click Launch. 
+I'll just give this a few minutes to create. 
+
+
+Creating an AMI:
+So in most cases in production you create an AMI based on a source instance. 
+That means you've provisioned the instance, selected operating system, performed any OS level configuration, added any data or application volumes that you require, installed your application, copied in your data, and performed any application configuration and once you've got the instance into a state when it's ready to go from that, you'll create an AMI. 
+Now the AMI contains a number of things that are required to launch a new instance and these are based off the fact that you making the AMI from an existing instance. 
+So because your source instance has EBS volumes, your AMI will need volume snapshots, and so an AMI create snapshots and references those within its configuration. 
+
+Block Device Mapping:
+In addition to that, it contains what's known as a block device mapping. 
+So when I launched an instance and I was looking at the EBS volumes to attach to it remember that 8GB default system volume? Now every operating system, whether it uses directly attached or network attached storage, uses what are known as device IDs. 
+So these device IDs are the unique identifier for the device. 
+It's how your Windows or Linux operating system, knows to mount a particular drive or a particular volume. 
+So because this AMI has snapshots of these original EBS volumes, the block device mapping essentially stores a link between the snapshots and how they're mapped to the new instance. 
+So when you launch that instance, it'll go ahead and create new volumes, and it will know how to map them to the instance so they're accessible to the guest operating system. 
+
+Permissions:
+Additionally, an AMI contains permission. 
+So who can use that AMI, who can use it to launch an EC2 instance, and we'll look all of those things as I go through the demo component of this lesson. 
+So now this looks to be ready. 
+I've got an EC2 instance, and I'll just verify it by copying its public DNS name and opening that in a new tab, so you'll be familiar with this by now. 
+It's the Adrian's Cat Hall of Fame website, and it looks as though it's got all of the images and all of the amazing modern animations. 
+So at this point, I'm good to go. 
+The best practice to create a good AMI is that you shut down the instance. 
+So that's the first thing I'm going to do. 
+I'm going to go to instance state and then stop an AMI create snapshots and included in those snapshots is a snapshot of the root or system volume of the instance, and it's always best practice for consistency reasons to do that while the instance is in a stop state. 
+So when you're creating an AMI you need to make sure the instance is in a stop state to ensure that consistency of the root volume. 
+Okay, so this is in a stop state and I'll go ahead and create my first AMI. 
+So to create an AMI we'll right click on the instance, go to image, and then create image. 
+We'll need to do a couple of things, and the first thing is to name it. 
+So I'm going to call it the Cat Hall of Fame and I'll tag it with version one and I'll put that for both the image name and the description. 
+Now, remember earlier when I talked about block device mappings? This is what this is. 
+It's a list of all of the volumes that are attached to this source instance, together with their device ID. 
+This device ID is what's presented to the guest operating system so, Linux, in this case, it's how Linux knows to map the individual volumes. 
+When I'm launching a new instance from this AMI this block device mapping is how EC2 knows how to structure the resulted instance. 
+So how do you know which volumes to attach and how to attach them so which device IDs to use. 
+This should generally look exactly the same as the source instance. 
+You are able to add additional volumes to this AMI but generally you're creating it in AMI to be in exactly the same state as the source instance. 
+So in this case, I only have the single attached volume, the system volumes. 
+So I'll go ahead and create the image. 
+Now, at this point, what he see two is going to do is go ahead and create snapshots of all of the volumes that are attached to the EC2 instance that I just configured in that block device mapping. 
+So if I go to snapshots, we'll see that we've got a pending snapshot for this 8 GB system volume that's attached to this Linux instance. 
+So the first step in the process is to create the snapshots so that's these snapshots that are referenced in the AMI. 
+Once the snapshots are created, the AMI will be created, and then it'll be good to use. 
+So this process is completed. 
+A snapshot of the system volume is ready to go. 
+If I go to AMIs once that's been completed the AMI has now created and ready to go. 
+So the AMIs are essentially a container which references the snapshots that the original source instance had as well as this block device mapping. 
+Now, in addition, it has permissions. 
+
+
+Launch Permissions:
+These permissions are launch permissions an AMI could be in one of three states. 
+Private:
+It defaults to private, which means only the owning account. 
+So my account can access and use this AMI. 
+Publuc:
+I can change it to public, which means that every AWS account will be able to freely search for this AMI and launch instances from it.
+White List Specific Account to Access AMI(s):
+ I can use a middle ground which is set to private but with individual AWS accounts white listed so that they can use this AMI to launch instances. 
+So at this point, because the AMI is created, what I can do is go back to instances. 
+
+
+
+Block Device Mapping:
+I can terminate this source instance so we don't get confused and once terminated, I could go back to AMIs, select the AMI I just created, right click, launch the AMI, and then the process should look familiar. 
+I'm just launching an EC2 instance. 
+The process is exactly the same but instead of using an AWS provided AMI I'm utilizing the one I just created. 
+So I'll select T3.micro. 
+I'll follow the rest of the process exactly as I've done earlier in this course, so it's in the default VPC. 
+It's got a public IP address. 
+When I go to storage based on the block device mapping inside this AMI I'll be presented with storage screen. 
+Now I can add additional volumes to this instance, just as I can when I'm launching an instance in the normal way but by default, this is a representation of this block device mapping. 
+So if I'd have created an AMI from an instance with, say, 10 volumes than this storage screen would list each of those 10 volumes. 
+What it's doing here is creating new volumes on a new instance based on the snapshots that the AMI references. 
+In the case of this example, because my source instance only had the one volume that's all that we see the one single root volume so I'll go to next add tags. 
+I'll configure a security group. 
+I already created a security group, so I'll select to use an existing one, and I'll select AMI demo. 
+Remember, I used this for the source instance. 
+It's got port 80 so I could browse the website and port 22 so if needed, I can manage it. 
+So select this security group. 
+I'll go to launch the instance and as before, I'll just elect to proceed without a key pair because I don't need to connect to the Linux shell. 
+So I'll launch this instance. 
+This process is exactly the same as when launching a normal instance using an AWS provided AMI. 
+The only difference is that I'm now launching from my custom AMI the only difference we're following the process exactly the same and even when you're launching an EC2 instance normally you're following exactly the same process you're just using an AMI that was created by AWS. 
+It still has the AMI. 
+It still has the snapshots. 
+It still has the permissions and the block device mapping it's just that instead of you creating it, it's been done by AWS. 
+There's no change when making your own AMI. 
+So this takes a couple of minutes. 
+It's still in initializing stage, but what I'll do is I'll copy the public DNS, close down this tab, and then open this in a new tab and then we go. 
+I've got the Cat Hall of Fame website that's running without any problems, and that's based on this custom AMI that I just created. 
+Now this is a simple example, but the architecture is the same, whether it's simple or complex. 
+
+Use Case:
+What I've done is have preconfigured a source instance from that source instance, I have created an AMI, including snapshots, permissions, and the block device mapping, and I've used this AMI to launch an additional instance. 
+This example just creates a simple website with some cat pictures. 
+It uses the user data to build it, pulling these images down from a GitHub repository. 
+It takes seconds but imagine if the process that we used to build our website to install our application, to copy in our data, and to perform additional configuration took 30 minutes. 
+By creating an AMI with all that worked on upfront, it saves us that 30 minutes every time we deploy it and architecturally, that's known as AMI baking or AMI prebaking. 
+You essentially do the work in advance. 
+You do all of the extensive installation and configuration and then you prebake that into an AMI. 
+It can save you significant time if you needed to deploy hundreds or thousands of the same application. 
+Another advantage using AMIs is an architecture that's called immutable architecture. 
+Immutable architecture is a technique where servers, in this case EC2 instances, are never modified after they're created. 
+Imagine that we have a corruption in this Cat Hall of Fame website rather than connecting to it, performing diagnostics, fixing it, and hopefully getting it back into a working state. 
+We could just terminate the instance and provision a brand new one from this known working AMI. 
+If something breaks, you delete it and create an identical version of that thing. 
+Immutable architecture generally means that once provisioned, things don't change. 
+If you want to make a change, you make a different AMI a version two and you deploy that new version of that IAM. 
+IAMs are generally used either to perform base installations or when you're using an immutable architecture. 
+Generally, organizations have processes that every time they release a new version of their application, they create a brand new AMI with that new application version prebaked into it and it just means that whenever they need to deploy that application, it's in a known working state. 
+That's immutability. 
+You don't change it afterwards, you don't adjust things. 
+You create a new version. 
+You test that new version and then you use AMI to deploy across your entire infrastructure. 
+Immutability is a great way of ensuring a perfect clean infrastructure, which is free of bugs. 
+Now AMIs can also be used for scaling or high availability. 
+I'll be talking about that later in the course, but you have a feature of EC2 known as auto scaling groups and these could be used to deploy and scale EC2 instances based on load, and you can utilize AMIs to deploy new instances using a prebuilt application that stored inside the AMI. 
+So it saves time when you're provisioning instances. 
+Imagine if you've got an application that's running its business critical. 
+One of the EC2 instances fails, and you need to replace it. 
+If building a new server took five or 10 or 20 or even 45 minutes to build using your normal application process, then you wouldn't be able to recover for at least that time period. 
+If you prebake that into an AMI then you could launch a new instance from the AMI within minutes. 
+That's important to understand for the exam. 
+AMIs can be used where you've got complex applications installations or when you're using an immutable architecture and you want to deploy rapidly but AMIs do have their downsides. 
+With AMIs, the config is built in. 
+It's not something that you can really customize based on things like instance size or availability zone or subnet or IP address. 
+That's where bootstrapping comes in handy. 
+Bootstrapping is when we use the user data to build an EC2 instance. 
+So remember, if I go to launch an instance, I select an operating system, select a particular instance type, and then go to configure instance details. 
+If I use the advance details dropdown we've got this user data section. 
+This is how we can paste in instructions to the EC2 instance using this is known as bootstrapping and bootstrapping comes in handy because it addresses some of the limitations of using AMIs and bootstrapping is going to be the topic that we cover in the next lesson. 
+So go ahead, mark this one as complete and when you're ready, join me in the next.

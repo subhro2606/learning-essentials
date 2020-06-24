@@ -1,0 +1,105 @@
+Welcome back and in the last lesson, I'll step through the architecture of hardware or VPC VPN, which is one option that you've got when you looking to create connectivity between an AWS Network and something that's external. 
+
+
+Direct Connect:
+Now another option you've got is a product known as AWS Direct Connect or DX for short and Direct Connect is a physical connection between your network and AWS either directly in a Direct Connect location using a cross connect, which is essentially a piece of networking cable, or utilizing a customer router or a partner router at the DX location. 
+So this is essentially architecture of how a Direct Connect works. 
+Before I talk about that, though, it's worth just going down to basics. 
+
+So a Direct Connect is a physical connection, whereas a virtual private network is a virtual connection that operates over the public internet. 
+A Direct Connect is a physical piece of fiber that runs between one of your business premises and AWS's network. 
+Now AWS have a number of Direct Connect locations, or DX locations which are distributed globally and in order to get a Direct Connect, you have to have equipment located at one of these Direct Connect locations or alternatively you need to have an arrangement with the direct connect partner, which themselves has communications equipment at this DX location. 
+So in either case, a direct connect is a physical or cross connect connection between an AWS router and another router that's within a DX location. 
+
+How DX Connect works:
+So that's how it all starts. It's a physical connection. 
+
+Order Directly from AWS:
+Now, if you want to go to AWS directly, then you can order a Direct Connect directly from the AWS console. So if I go to the AWS console and I type in Direct Connect and just open that up. Then I can create a DX connection I'll need to give the connection a name, specify a DX location. 
+
+**DX Locations:So this is the DX location on this diagram and if I scroll down, you'll note that these are distributed globally, there's one in Amsterdam, Dublin, one in the U.A.E., lots in America, and even one in Sydney, Australia.  So these are distributed close to major centers of operation for AWS. 
+Now again, if you go direct with AWS you're limited to 1 GBPS or 10 GBPS. 
+The way that this works, if you're ordering it directly from AWS is you'll log the create connection request in the portal. 
+Once you've done that, AWS will have provisioned your 1 gig or 10 gig connection on one of their edge networking devices so a dedicated port for you. 
+**LOA: Once that port is provisioned you'll be able to download what's known as an LOA which is a letter of authorization. 
+Now this letter of authorization is valid within one DX location, and it essentially gives you the permission to arrange a physical cable to be connected between the AWS equipment and your equipment in that DX location.
+
+So essentially, if you going direct, you get the letter of authorization and you arrange the physical connection between AWS and yourselves. So if you're not using a DX partner then either you would need equipment in this DX location, or a company needs equipment on your behalf.  
+
+
+Direct Connect Partner:
+If you need anything smaller then you need to use a Direct Connect partner and the way that this works is they will have equipment within the DX location. 
+You'll order the connection from the partner as a service and the partner will arrange the connection between themselves and your on premises network. 
+
+
+
+VIFs:
+Now, once that physical connection is installed and operational, you then need to define on top of that what's known as virtual interfaces or VIFs so you can have many different VIFs running on top of a single Direct Connect. 
+Now these VIFs come in two different types. 
+
+Public VIFs:
+We've got public VIFs and public VIFs indicated here in red allow you to connect from your own on premises equipment through to any public AWS services. 
+So S3, DynamoDB, SNS, SQS, and many more. 
+
+Private VIFs:
+A private VIF on the other hand, is a private connection and this goes from your business premises through to a specific VPC, the way that works is much like VPNs. 
+You need to create a virtual private gateway and attach it to a VPC and once you've done that you can create the private VIF and the private VIF attaches or is associated with this virtual private gateway and once you've done that, you configure your on premises router, and you've got a media private connectivity from your premises through to a VPC. 
+At that point, once that networking is established, it operates in much the same way as a VPN. 
+You've essentially got direct private connectivity. 
+
+
+Now at an associate level, that's pretty much all you need to know. 
+It's not something that you'll need to be aware of exactly how to configure and it's not something that you can easily demonstrate using the console because it's a physical connection. 
+It's something that you have to actually physically provision and have AWS do some work in their data centers before you can actually utilize it. 
+So it's not something where you'll need the implementation details but for the exam, you'll need to know exactly when and where you'd use a Direct Connect. 
+
+Common Uses:
+So some of the situations where you would use a Direct Connect is where you need speed and consistency. 
+So Direct Connection are available obviously using 1 gig or 10 gig connections, and they are dedicated connections. 
+They don't share bandwidth or speed, and they don't contend with your existing internet connections. 
+They are dedicated physical connections. 
+They run over a private cable and then straight into the AWS network and so you're generally going to get the full speed available as part of your physical connection. 
+So if you order a 10 gig connection, you're going to get that full speed. 
+Now, in addition to this speed element, Direct Connects are also low latency. 
+So because it doesn't have to traverse the public internet, you're going to get really low latency so low ping times, and that's going to translate into high application performance, especially if you get applications which are very "latency sensitive".  So keep that in mind for the exam. 
+Also important is as well as that low latency it's "consistent low latency". 
+So you're not going to get those high and low ping time variances that you'll be used to if you're using the public internet or a VPN, you're going to get low latency and fast speeds. 
+
+
+Trade Offs:
+
+Time to Provision:
+Now, of course, because it's a physical connection, you can't provision these quickly. 
+If you do happen to have equipment inside the DX location, then you can create a Direct Connect request and often that connection will be active in a number of days, and you can organize the cross connect to connect from the Direct Connect equipment onto your customer or partner router in the DX location but even best case, you're probably looking at about a week to have a Direct Connect provisioned assuming you're in this DX location. 
+If you're not and if you need a physical connection provisioned from the DX location to your customer premises then getting a fully provisioned and active Direct Connect can sometimes take months. 
+So in the exam, if you face any questions where you need quick access to this networking then Direct Connect is not the correct approach. 
+Un Encrypted Data:
+The other thing to be aware of about Direct Connects is by default, it is not encrypted. 
+So whether you're using a private VIF to connect into a VPC or whether using a public VIF to connect to public space services from a networking perspective, it's not encrypted, and the applications that you use that work on top of these private or public VIFs, they could utilize encryption but if they don't, for example, if you're just using HTTP then the transit of data is unencrypted. 
+Direct Connect just on its own does not encrypt data and that's in contrast with the VPN, which is obviously an end to end encrypted channel of data. 
+
+Running a VPN on Top of DX Connect:
+Now, one thing that you might face in the exam is probably something that's more the professional level than the associate is that it is possible to run a VPN connection over the top of a public VIF running on a Direct Connect connection. 
+So let me just explain why you do that. 
+So you provision a Direct Connect. 
+You get access to this really high speed low latency networking, so it's consistent high performance networking but it's not encrypted. 
+You create a public VIF over the top of that, and that would grant you access to public AWS services. 
+Now the endpoints of a virtual private gateway they're public space services and so you could then create an IP set VPN over the top of that public VIF to the endpoints of this virtual private gateway and in doing so, you get the best of both worlds. 
+You get this high speed, consistent performance and you get the encryption by using a VPN. 
+
+DX is not highly available:
+Another thing to keep in mind is that Direct Connect is not highly available. 
+It is a physical connection. 
+It's one piece of fiber between your customer or partner router and the AWS networking equipment. 
+So if you utilize this, it's a single cross connect. 
+If you've also got back call from the DX location to your customer premises then again, that is likely to be a single physical connection and so if it is business critical that you have access to this networking, then you can either prevision an additional Direct Connect or you can use a VPN connection as a backup and then what I see in a lot of commercial situations is that companies provision a VPN first while they're waiting for their Direct Connect to become active. 
+So if you face any exam questions that suggest a Direct Connect is required then also keep in mind that you can prevision a VPN first, wait for the Direct Connect to become active, and then use the Direct Connect as the primary connection and either leave the VPN there as a backup or deprovision it and get another Direct Connect. 
+
+Exam Tips:
+You've got a lot of different options, but for the exam, what you really need to remember is that the Direct Connect is a physical connection. 
+On top of the Direct Connect, you can configure many private VIFs and many public VIFs. 
+Private VIFs give you access to a single VPC. 
+Public VIFs give you access to the public space endpoints that AWS provides. 
+So S3, DynamoDB, SNS, SQS, and many more but with that being said, that is everything that I wanted to cover about Direct Connect from a technical perspective. 
+In the next lesson, I'm going to talk briefly about the situations where you might select VPN over Direct Connect and vice versa. 
+So go ahead, mark the video as complete and when you ready, join me in the next lesson.

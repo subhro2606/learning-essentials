@@ -1,0 +1,73 @@
+Principal : A person or an application that can make an authenticated(security info is exchanged) or anonymous(no security info is exchanged) request to perform an action on a system.
+
+Authentication : The process of authenticaing a principal against an identity. This could be via userid/password or API keys.
+Authentication is the process of proving that you are who you say you are. So you're a principal. 
+
+Identities: Objects that requires authentication and are authorized to access resources.
+You're attempting to prove that you're an identity and the process of doing that is called authentication. When you log into a website be it Netflix, your email, or the Linux Academy platform, or even AWS you are authenticaing onto that platform. 
+
+Authorization: The process of checking and allowing or denying access to a resource or identity.
+Once you are authenticated , you become the identity the identity is then given permissions either allow permissions or deny permissions to access certain areas of that system. 
+
+    
+
+#####################################################################################################################################
+Principal:
+Welcome back, and in this lesson I'll be covering the basic principles of access management. 
+I want to focus on two terms, especially authentication and authorization but I'll be covering all four of these topics throughout the course, so I wanted to introduce them in this lesson. 
+So I want you to imagine that you're attempting to use an AWS service. 
+For this example, it doesn't matter which one. 
+From a security perspective, you are the principal. 
+A principal just means a person, an application, or a system which can make a request to another system. 
+In this example, it's AWS, but it doesn't have to be AWS. 
+It could be another website. 
+An example of this is the Linux Academy website. 
+Now when a principal makes a request to another system, it can either be an anonymous request, which is where no security information is exchanged. 
+You as the principal don't state who you are, and the system doesn't require you to. 
+That's anonymous access, and that's what I'm doing right now with the Linux Academy website. 
+I can use the website, for example, I can click on courses and see the courses that are available. 
+I can click on features and see the available platform features, but I don't have access to any of the content that I normally would, because it's an anonymous request. 
+I'm not logged in. 
+My requests are anonymous, and I'm not providing any security information. 
+
+
+
+Authentication/Authenticated Request:
+Now the alternative to this is what's known as an authenticated request. 
+An authenticated request, as the name suggests, uses authentication. 
+That's a process of verifying an identity, in my case, proving the I'm Adrian rather than somebody pretending to be Adrian. 
+Now authentication can be in many forms. 
+It can be done using username and password. 
+It could be a pin code. 
+When you use your bank or credit card or for applications, it can be using what are known as API keys, but more on that later. 
+Simply put, authentication is a process which verifies that you or me are who we say we are and when I log into Linux Academy website, and use my username, I'm performing authentication, I is the principal, I'm authenticating myself that I am an actual identity. 
+I'll talk about what identity is momentarily, but to demonstrate this process, I can click on log in. 
+I'll be prompted to provide some authentication information to prove that it is actually me. 
+In this case because I'm already logged in, I'll be taken straight to the Linux Academy website. 
+So this is the private part of the website that you get access to if you're a member. 
+So what I've done in that process is I as a principle have provided authentication information, and I've proven that I'm an identity on the platform in this case, Adrian.cantrill@linuxacademy.com. 
+If I wasn't logged into the site so I'll just quickly log out, that process would require a challenge and response process. 
+So now if I click log in I'm prompted to enter some authentication information. 
+In this case, I log in using my Google credentials, all pulled that process now I'll need to select the specific Google account to use. 
+Once that information is validated. 
+It'll log me into the site. 
+I've performed this authentication process so when you successfully authenticate the system knows that you're principal so you who you're claiming to be is. 
+
+
+
+Identity & Authorization:
+Now your identity, the identity inside the system, the last process is authorization, and it's really critical that you understand the difference between authorization and authentication. 
+Authorization takes unauthenticated identity in this case, adrian.cantrill@linuxacademy.com and authorization either allows or denies access to various areas of a system. 
+Now, in the case of Linux Academy, this will be determining whether I've got a valid subscription and providing access to certain courses. 
+With AWS, it will be determining whether you've got access to certain services or subsets of those services. 
+So this is a concept that you need to grasp completely before we move forward in the course. 
+A principle is a person or application that can make either unauthenticated or an anonymous request to a system. 
+Authentication is the process of proving that you are who you say you are. 
+So you're a principal. 
+You're attempting to prove that you're an identity and the process of doing that is called authentication. 
+When you log into a website be it Netflix, your email, or the Linux Academy platform, or even AWS your authenticating onto that platform. 
+Once you do that, you become the identity the identity is then given permissions either allow permissions or deny permissions to access certain areas of that system. 
+Now there are four concepts, which is separate but closely related when it comes to logging in and accessing systems inside AWS and so at this point, I don't need you to know the process of how it works in detail. 
+Just be aware of these four individual components. 
+For now, though, that's a great job so far. 
+Let's mark this lesson as complete and move on to the next lesson where I'll be talking about that shared responsibility security model.

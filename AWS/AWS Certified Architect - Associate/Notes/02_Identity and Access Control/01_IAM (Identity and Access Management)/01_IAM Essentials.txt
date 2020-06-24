@@ -1,0 +1,192 @@
+
+
+IAM: 
+Identity and access management, also known as IAM controls access to all of the AWS API endpoints. It controls the authentication & authentication.
+Root User: 
+•	Root user is created automatically for an account and it has unrestricted access and full control of the account. 
+•	For an isolated AWS Account there isn't a real way to restrict the access for a root user(Exception AWS Organization).
+•	The account root user is responsible for the initial setup of IAM inside an AWS account. 
+IAM User's sign in link: 
+•	This is the Link used by IAM Users to login to the AWS Account. 
+•	Looks like:  https://<Account_id>.signin.aws.amazon.com/console
+•	Example: https://323131968025.signin.aws.amazon.com/console
+•	We can also define an alias for the account id. For example if the alias is "subhro2606", the sign in link would look like https://subhro2606.signin.aws.amazon.com/console
+Password Policy: The password policy governs minimum password length and other limitations and requirements of the passwords and initially the root user is responsible for setting it.
+Architectural Components of IAM:
+•	IAM users
+•	IAM groups
+•	IAM roles
+•	IAM policies
+IAM controls access to AWS services via policies that can be attached users, groups, and roles. Users are given long-term credentials to access AWS resources (username and password or access keys). 
+Roles allow for short-term access to resources when assumed, using temporary access credentials. 
+ARN(Amazon Resource Name) :
+ARN can uniquely identify any resource in any region in any account. 
+ARNs always begin with: arn:partition:service:region:account-id: 
+•	partition = aws or aws-cn (for China) 
+•	service = the AWS service: s3, ec2, rds, dynamodb 
+•	region = region code: us-east-1, ap-southeast-2 
+And, depending on service, finish with: 
+•	resource 
+•	resourcetype/resource 
+•	resourcetype/resource/qualifier 
+•	resourcetype/resource:qualifier 
+•	resourcetype:resource 
+•	resourcetype:resource:qualifier 
+
+Example ARNs: 
+•	arn:aws:iam::123456789012:user/roffle 
+•	arn:aws:s3:::myamazingcatpics/truffs.jpeg
+•	arn:aws:dynamodb:us-east-1:123456789012:table/ratemycats 
+
+In some cases, wildcards are supported: 
+•	arn:aws:ec2:us-east-1: 123456789012:instance/* 
+•	Fields with :: omit the value, and * is a wildcard match.
+
+
+
+################################################################################################################################
+Hello and welcome to the identity and access management topic of the course. 
+Identity and access management, also known as IAM, is an essential part of AWS because it controls access to all of the AWS API endpoints. Now as a reminder, an API or an application programming interface is the way in which applications talk to each other. It's also the way that the console UI, the AWS command line tools, and any other applications designed to work with AWS talk to AWS. So don't be scared off by the term API. 
+You're actually already using them if you use the console UI. 
+Whenever you interact with the AWS console in any way, what it's doing is behind the scenes, it's using those APIs to interact with the AWS infrastructure. 
+So IAM is the thing that authenticates you to AWS. It authorizes you, and so together that means it decides if a request that you make is allowed or denied. If you attempt to store an object in an S3 bucket IAM allows or denies that request. Any interaction with AWS is decided on by IAM. Now in this lesson, I want to introduce IAM. I'm going to cover the theory. Its high level architecture and then, in the remaining lessons in this topic, we'll get the chance to go a little deeper on the individual components of the service. 
+Now, before we talk about IAM, it's worth setting the scene. 
+I mentioned earlier in the course that when you create an AWS account, you automatically create an account root user. 
+
+Root User:
+Initially, the account root user is the only identity in the account, and it's the one which starts with full control of the account, and it also always keeps this full and unrestricted access. There's no real way in an isolated AWS account to restrict what the root user can and can't do. Now there is one small exception, and this involves AWS organizations which I'll cover in this section of the course but that will be a little bit later on. 
+The account root user is responsible for the initial setup of IAM inside an AWS account. 
+So if I move across to the IAM console, I'm logged into this account using the account root user, I want to draw your attention to this IAM user's sign in link. 
+
+IAM User's sign in link:
+This is the link that any IAM users for this account will use to sign into this account. 
+Now when you first create an account, this sign in link is a standard format. It starts with the account number of the account and then it finishes with https://323131968025.signin.aws.amazon.com/console You're able to customize this and apply an alias and I've done that. I've added the alias  la-saac01-master. so you're able to customize it to make it a little bit easier to identify and a little bit easier to use by your IAM users. 
+
+Password Policy:
+The account root user is also initially responsible for account wide settings and generally the major component of this is the password policy. 
+The password policy governs minimum password length and other limitations and requirements of the passwords. 
+So you can set that it's got at least one uppercase and one lowercase character, maybe one number and one nonalphanumeric character and then you're also able to set various options, such as allowing users to change their own password, enabling password expiration, and preventing any reuse of historically used passwords. 
+There are other options here if I scroll down, such as options relating to the security token service and endpoint options but we'll be covering those later in the course. 
+IAM allows us as architects to design AWS deployments with more granular permissions because unlike the account root user, which always has full and unrestricted access to AWS resources in the account. 
+With IAM, we can assign more granular permissions. 
+That's the benefit that IAM provides. 
+It's the only way that we can implement a best practice security infrastructure within AWS. 
+
+
+Archotectural Components:
+Now I want to quickly step through the base level architectural components that IAM provides within this lesson and then, over the next few videos we're looking more detail at each one in turn. 
+We're going to start with IAM users. 
+IAM lets us create a few types of identity or things which help us manage those identities. 
+We've got IAM users, IAM groups, IAM roles, and IAM policies. 
+
+
+IAM Users:
+IAM users are generally used to represent actual users. 
+So human beings that log in to an AWS account or access services. 
+IAM users don't have to be users though. 
+They could be service accounts. 
+So maybe accounts that are used by a piece of auditing software or maybe backup software. 
+When you think about IAM users, you should be able to picture the thing or things which use that user—if you can imagine a single human logging into an IAM user or a group of humans or a service account used by one or more applications then you can be fairly confident that an IAM user is the right identity to use. 
+If you can't picture who or what uses that identity, then you might want to look at another identity type in IAM which is an IAM role, and we'll talk about that later in this topic. 
+For now and for the exam IAM users are the type of identity that you log into. 
+They have usernames and passwords and you log in to the console UI using IAM users and later in this section of the course we'll be using IAM users to secure your own personal AWS account that you created at the start of this course. 
+For the next few lessons, I want to focus on the theory. 
+
+Amazon Resource Name:
+Now, before we move on to the next piece of IAM, I want to take this opportunity to introduce a concept that appears everywhere in AWS and that's the ARN or Amazon resource name. 
+If I opened up this user that I've already configured inside this AWS account, you'll note that it's got a user ARN. 
+Now an ARN is a standard notation inside AWS. 
+It's a thing that can uniquely identify any resource in any region in any account. 
+So if I open up the examines on this page of the Orion Papers this is what ARN looks like. 
+ARNs always begin with ARN and then a colon and then it's got the partition, and the partition is either AWS or AWS-CN for China. 
+It then lists the service inside AWS. 
+ So S3, EC2, RDS, and DynamoDB are just a few examples. 
+It lists the region so U.S. 
+East 1, A.P. 
+Southeast 2, or any of the other AWS regions and then it's got the account ID and then after that it follows up with any of this structure of naming. 
+So either the resource, the resource type, and then the resource or any of these other options. 
+The idea is that for any given ARN, you can uniquely identify a resource. 
+Now, some examples that I have included in this case we've got an IAM user in account 123456789012 and it's an IAM user called Ruffle, and we can see that this is a unique identifier. 
+So if you've got this ARN, you can point to the exact service, the exact account, and the exact type of resource that this is. 
+So this uniquely identifies this Ruffle user globally across every AWS account. 
+Note how IAM doesn't need the region because this is a global service. 
+So all IAM users are valid inside all regions in a given account. 
+We've also got another example, which is an object inside an S3 bucket called My Amazing Cat Pics and the object is truffs.jpg. 
+Note that with this example, in addition to not needing the region, we also don't need the account number and that's because S3 is globally unique across all accounts and in the last example, we've got a DynamoDB service in the U.S. 
+East one region in this account, and it's a table called Rate My Cats. 
+These are all simple examples of ARNs. 
+I just want to introduce them now because we'll be using them throughout the course, and you'll be using them throughout the time that you work with AWS. 
+One last point wild cards are supported and so with this example, you can use an ARN which can represent all EC2 instances or AWS's virtual machines in a region in an account. 
+So by using the star, we're matching all EC2 instances in this account in this region. 
+Now, don't worry, if you don't quite understand it I just wanted to introduce the concept at this stage, so you know what ARN is. 
+You'll get plenty of exposure as you go throughout the course. 
+
+
+Groups:
+Now another feature that IAM provides is groups and groups allow you to group users together. 
+If you have a specific team that you want to share a similar set of permissions, maybe a dev team, a finance team, an admin, or support team. 
+A user can be placed in multiple groups, and a group can have multiple users. 
+I'll be talking in much more detail about groups in a dedicated lesson, but I wanted you to know that groups exist. 
+Groups don't have any authentication information of their own, so they don't have passwords, but they can be assigned IAM policies. 
+I'll talk about those briefly in a minute as well as in a dedicated lesson in this section an IAM policy is the thing that defines permissions, and they could be assigned to users and to groups. 
+If they're assigned to groups, they affect every user in that group. 
+Now, since we're talking about policies, let's just jump over to those now. 
+
+IAM Policies:
+IAM lets you create and manage what are known as IAM policies. 
+They're essentially JSON documents, and they define under which circumstances a principal in identity is authorized or not to access one or more resources or features of resources in AWS. 
+So policies define what can and what cannot be done. 
+They don't do anything by themselves. 
+So policies just define these things. 
+They only take effect when they're attached to users, groups, or roles and when that happens, they do something. 
+So we'll be talking about policies in much more depth inside this topic. 
+I just want to introduce the concept at this point, and then we've got IAM roles and roles are really interesting identity inside AWS. 
+
+
+IAM Roles:
+Roles can actually have permission so you can attach policies to roles as well as users and groups but roles can't be logged into they're not used on a permanent basis. 
+I'll cover this in more detail later in this topic, where I'll give you a good overview of what roles are used for but think of roles like an extra job you might have in your employer. 
+You know how when we do fire drills and some people get put on those awesome hats and glowing vests they essentially take on another role. 
+They become a fire marshal for the duration of the drill. 
+They also probably gain more authority in the business for the time the fire drill is happening. 
+Maybe they can even boss around the CEO, and that's what a role is. 
+Roles inside AWS serve a number of really important functions. 
+I'll talk about them in detail in the dedicated lesson. 
+Roles could be used by humans, by applications, or even by AWS services doing things on your behalf. 
+Now don't worry, I don't expect you to understand roles yet, but you will do by the end of the dedicated lesson when we talk about them later in this topic. 
+
+IAM Credentials:
+The last thing I want to talk about in terms of the features that IAM provides are credentials. 
+Credentials are what principles use to prove that they are an identity inside IAM. 
+So imagine that you're logging in to AWS. 
+When you're logging into AWS you have to provide your username and password to prove that you are you and that's an example of IAM credentials. 
+You're supplying your username and password to IAM in order to prove that you are you. 
+IAM offers three main types of credentials. 
+UserName Password:
+You've got the username and passwords, which are used by IAM users they're long term and they're used to access the console UI. 
+Access Keys:
+We also have access keys, which are long term credentials, kind of like username and passwords, but they're used by the command line. 
+If you call AWS's APIs directly, then you're going to be using these access keys.
+
+Access Keys Used by Roles:
+Then we've got a different type of access keys, which are known as short term credentials and these are used by roles. 
+They're kind of like access keys and kind of like usernames and passwords, but they're time limited. 
+The role gives some additional authority or access rights to an identity for a certain duration and so, when the identity assumes a role that identity gets temporary security credentials that give the identity those additional access rights for a certain duration and again, don't worry, we'll be talking in much more detail about roles later in this topic. 
+I just wanted to introduce it. 
+
+IAM identity has no permissions:
+Now this is the most important thing that I'll talk about in this lesson, because I'll be covering everything else in more detail later in the topic. 
+By default, an IAM identity has no permissions. 
+It has none. 
+If you create any form of identity inside AWS until you give it some permissions, it has none. 
+This is the default in AWS. 
+You can't access anything you have an implicit deny until you are given the permissions to do something. 
+It's known as an implicit deny, I want you to remember that term, because if nothing else applies, if an individual identity, a user, a group, or a role is not given the permissions to do something, they are denied the ability to do that thing. 
+That's one of the most important things that you need to remember for the exam. 
+Now I know I've skip through this fairly quickly and that's okay. 
+That was the intention. 
+In the remaining lessons in this topic, I'll be covering everything on this diagram in detail, so I'll be talking about IAM users, IAM groups, IAM roles, IAM policies, the different types of credentials, and we'll also finish setting up your AWS account with an IAM user and performing additional configuration, making sure it's secure and ready to go and setting up the command line tools. 
+So for the next few lessons in this topic and the short topic that follows, you'll get a great understanding of IAM. 
+I can't wait to get started. 
+It's one of the most important topics in AWS. 
+So go ahead, mark this video as complete, and when you're ready, join me in the next.

@@ -1,0 +1,219 @@
+https://github.com/linuxacademy/content-aws-csa2019/tree/master/lesson_files/01_aws_sa_fundamentals/introduction_to_cloudformation
+https://s3.amazonaws.com/cloudformation-templates-us-east-1/WordPress_Single_Instance.template
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html
+
+
+CloudFormation is an Infrastructure as Code (laC) product—you can create, manage, and remove infrastructure using JSON or YAML. 
+Template: A CFN template is JSON or YAML. It contains logical resources and configuration. 
+Stack: Stacks are created and modified based on templates, which can be changed and used to update a stack. 
+Physical Resources: Stacks take logical resources from a template and create, update, or delete the physical resources in AWS. 
+CloudFormation is effective if you frequently deploy the  same infrastructure Or you require guaranteed consistent configuration. 
+
+
+Important Tags inside a Template:
+Resources: This is the only mandatory section of a cloud formation template. The resources section of the template the resources section of the template is where we define our resources. 
+AWSTemplateFormatVersion: Template version, which is AWS's way of future proofing the format. So the current version is "2010-09-09". CloudFormation does make an assumption if this is not present but if you do want to be specific, you can state this template format version.
+Description: Description, allows us to give a free text description to the template. **If you are putting a description in, it does need to immediately follow this AWS template format version. 
+Metadata:
+Parameters:
+Parameters is a way that a template can ask the imput from a user. 
+So maybe you've got a template is creating a WordPress blog well the parameters section is a way the template can ask for the size of the blog. 
+So what amount of CPU and memory is the instance going to have that's going to run the blog. 
+Parameters is a great way for the template to make adjustments based on input. 
+Mappings:
+Outputs:
+The outputs part the template is the way in which CloudFormation can generate some outputs to be delivered back to the user or the automated process that is using CloudFormation, an example of this might be if you're making a WordPress blog. 
+This could contain the URL or web address to access that blog. 
+
+
+A CloudFormation (CFN/cfn) template is used to initially create a CFN stack. A stack creates, updates, and deletes physical AWS resources based on its logical resources, which are based on the contents of a template. 
+• A CFN template is written in JSON or YAML. 
+• A template can create up to 200 resources. 
+• If a stack is deleted, then, by default, any resources it hay created are also deleted. 
+• A stack can be updated by uploading a new version of a template. 
+• New logical resources cause new physical resources. 
+• Removed logical resources cause the stack to delete physical 
+resources. 
+• Changed logical resources update with some disruption or replace physical resources. 
+* I don't necessarily expect you to get exam questions on this, but if you do, then just remember this one key rule that if a template has a description in it needs to immediately follow the template format version. 
+
+
+
+#####################################################################################################################################
+Welcome back and, in this lesson I want to briefly introduce AWS CloudFormation, which is an automation product available in AWS. 
+By introducing the basics now, I think it will help you interact with AWS in a more efficient way as we proceed through out the course, CloudFormation is an IaC or Infrastructure as Code product. 
+What this means is that rather than creating infrastructure manually, so using the c    onsole UI, or the command line tools to do it for you, you can create the infrastructure using a template and a template is just a file that's written in one of two formats JSON or YAML and you can use this template to create your infrastructure. 
+If you recall the last lesson so far, we've created infrastructure in AWS but we've done it in a manual way. 
+So in the last lesson where I introduce S3 I created these two S3 buckets catpic-ac and dogpics-ac. 
+In this lesson I want to show you how you can utilize CloudFormation to do a similar thing but in an automated way. 
+Now there are lots of benefits to using infrastructure as code as a solutions architect. 
+Firstly, you can do the work of planning infrastructure in advance. 
+You can test it in a test environment, iron out all the bugs, and then when you come to create it, it's really safe to do so. 
+If you create the infrastructure using a template then you can reuse it. 
+You could create a template that creates a cat pictures blog and use that template to create 100 Cat Pictures blogs. 
+You could do that without much additional effort and who doesn't want 100 cat pictures blogs. 
+Teams across a business they can reuse the work that other people do so you can build up internally in your business a library of templates. 
+You might have a template that creates a Microsoft Active Directory system. 
+You might have a template that creates an exchange email server or a Citrix desktop deployment. 
+The possibilities are endless but by building up an internal library of templates, you can reduce the effort required to consistently rollout systems. 
+If you're consultancy business or a type of business that roles out the same type of infrastructure day after day for different clients then by using CloudFormation, you could potentially save yourself a lot of time. 
+Now, because its automated infrastructure can also be created for temporary periods. 
+So if you've got development teams who want to roll out and test new versions of an application then they can use a CloudFormation template to deploy that infrastructure, install the code, test it, and then delete it afterwards. 
+Infrastructure can be created for one specific job and then removed. 
+CloudFormation can also be used for disaster recovery, so you can use it to decrease your recovery time objective because everything is automated, and above all it cleans up after itself. 
+So any infrastructure that it creates it can automatically remove afterwards and that's pretty important if you've got an account that you want to keep nice and clean. 
+Now I want this lesson to be a quick introduction, giving you just enough information to get started on the course, and then we'll swing back to CloudFormation later on in more detail. 
+Now I want to give you a quick demo of using CloudFormation in this lesson but before I do, let me quickly step through the architecture. 
+
+Cloud Formation Template:
+Everything starts with a CloudFormation template which is essentially a JSON or a YAML document, which defines resources. 
+As well as defining resources, it can also specify the configuration options on those resources. 
+So if you use it to create an S3 bucket as well as creating the S3 bucket it can control other elements, such as is the bucket public? Does it use encryption? and so on. 
+Now a template at a high level is actually a fairly simple document. 
+So let me move over into my code editor and just step through what a template looks like. 
+Now this is a version of a template in the JSON format. 
+So this is JSON and it represents the high level elements that a template needs to have some of these are mandatory and some of them are optional, and I'll talk about these in more detail in a second. 
+This is the YAML version of that same document. 
+So while the format looks slightly differently. 
+They convey the same set of information. 
+Now this is an associate course and an introduction lesson to CloudFormation. 
+So I'm not going to be focused on a lot of these sections of the template. 
+There are a number of points that I do want to make, though, which will become critical as you proceed throughout the course. 
+
+Resources:
+There's only one really mandatory section of any CloudFormation template and that's the resources section. 
+I'll talk more about what this does in a second, but essentially everything else is optional. 
+What I want to focus on at this point is the resources section of the template the resources section of the template is where we define our resources. 
+So let's look at the natural example. 
+I've got another template here called S3 bucket got JSON and all of these are available in the GitHub repository for this course in this lesson's file, so you can see those linked in the lesson description. 
+Now, this is a pretty simple example of a CloudFormation template in that it only contains the resources section and inside resources, it only contains one element, which is cat pics, and you might spot that it says AWS S3 buckets so this creates an S3 bucket for cat pictures. 
+
+AWSTemplateFormatVersion:
+So we've got the template version, which is AWS's way of future proofing the format. 
+So the current version is "2010-09-09" CloudFormation does make an assumption if this is not present but if you do want to be specific, you can state this template format version.
+Description:
+Description, as the name suggests, allows you to give a free text description to the template. 
+So it just helps you with the description. 
+That description is available when you're applying the template but the key thing to understand is if you are putting a description in, it does need to immediately follow this AWS template format version. 
+I don't necessarily expect you to get exam questions on this, but if you do, then just remember this one key rule that if a template has a description in it needs to immediately follow the template format version. 
+Metadata:
+I'm going to skip past metadata because at this level, and especially in an introduction lesson, it doesn't really matter. 
+Parameters:
+Parameters is a way that a template can ask the imput from a user. 
+So maybe you've got a template is creating a WordPress blog well the parameters section is a way the template can ask for the size of the blog. 
+So what amount of CPU and memory is the instance going to have that's going to run the blog. 
+Parameters is a great way for the template to make adjustments based on input. 
+So that's an important one to remember but at this stage, we don't need to know the format of it. 
+Mappings:
+I'll be introducing that as we proceed throughout the course, and you don't need to know about mappings, conditions, or transformed. 
+I'll be introducing those later on in the course as we need to use them now. 
+Outputs:
+The outputs part the template is the way in which CloudFormation can generate some outputs to be delivered back to the user or the automated process that is using CloudFormation, an example of this might be if you're making a WordPress blog. 
+This could contain the URL or web address to access that blog. 
+At this point, I don't need to go into this in detail. 
+It won't be given any examples because we'll be covering it later on in the course. 
+What I want to focus on at this point is the resources section of the template the resources section of the template is where we define our resources. 
+So let's look at the natural example. 
+I've got another template here called S3 bucket got JSON and all of these are available in the GitHub repository for this course in this lesson's file, so you can see those linked in the lesson description. 
+Now, this is a pretty simple example of a CloudFormation template in that it only contains the resources section and inside resources, it only contains one element, which is cat pics, and you might spot that it says AWS S3 buckets so this creates an S3 bucket for cat pictures. 
+
+
+Templates contain what are known as logical resources. 
+So anything that's contained inside the resources section of the template is a logical resource. 
+In this case, we're defining a logical resource called cat pics. 
+Now we can use this template to create a stack. 
+Think of a stack as a container. 
+Like a S3 bucket contains objects, a stack contains logical resources together with other things but more on this in a second. 
+You can use a template to create a stack. 
+You can change a template and use that to update a stack, and you can simply delete a stack. 
+A stack has an important function. 
+It creates physical resources. 
+For every logical resource that the stack has and remember, these are defined in the template, it creates a matching physical resource. 
+With the template that we were just looking at, that's a physical S3 bucket in the region that we're in in this account, the stacks job is to create the physical resources based on the logical resources that the stack has and also to update the physical resources if the logical ones update and in most cases, delete the physical resources if the logical resources are removed. 
+Keep this in mind the stack's primary role is to keep that link between the logical resources that are in the template and the physical resources there in your account logical to physical. 
+Now a stack has a name, and that name needs to be unique in that region in your account. 
+So let's look at how we go about creating a stack. 
+So let's go to the CloudFormation console and if you have decided to follow along, you don't need to do that because we do have a hands on the lab but coming up straight after this but if you are following along and you are using a cloud playground environment and you do see any other stacks in the account, don't worry about those. 
+You can safely ignore them. 
+Go ahead and hit Create Stack, and this begins the process of creating a stack. 
+Now I already have a template it's in the lesson files for this lesson and the template I'm going to apply is one that's called S3bucket.json. 
+So I'm going to go back to the console. 
+We select that the template is ready because you've already got this template and we'll want to upload the template file something to click on, choose file, and then locate this template inside the lesson files. 
+So it's the one that's called S3bucket.json. 
+So I'm going to select that click on Open. 
+It'll take a few seconds to validate it. 
+Click on next. 
+I need to give the stack a name. 
+So I'm going to call it S3 intro for S3 introduction because we don't have anything in the parameter section of the template we won't need to put anything here. 
+I'll just click on next. 
+There's a lot of advanced options that you can specify for Stacks. 
+We will be covering these later in the course, but for now I'm just going to skip past this and hit next and then on this review screen again I'm just going to scroll down and skip past it and click on Create Stack. 
+So this is going to begin the process of creating a stack based on this template and when the stack is creating, you'll see it goes through a number of states. 
+It starts off in create in progress and while it's creating, you'll see events that listed under the events tab. 
+I can hit refresh and get constant updates on this so we'll see that users initiated the process. 
+So that's me I have created a stack called S3 intro. 
+Now it lists the process of creating the stack. 
+At this point, I'm creating a logical resource so you can see this logical resource is here. 
+It's called cat pics. 
+You see that create is in progress. 
+Resource creation is initiated. 
+If I hit refresh again, it's create complete on the actual resource and create complete on the stack. 
+So when you create a stack, it steps through the template, looks at all of the logical resources, and for each of those, creates a physical resource. 
+In this particular case, it is a simple example of a CloudFormation template with only a single logical resource called cat pics and so the process of creating the stack is itself pretty simple with only a single major step. 
+Now, you can always click on the resources tab of a stack to see the physical resources that have been created by this template. 
+I can also click on services and because this created an S3 bucket as a resource I can open up the S3 console and see firsthand that it's created an additional S3 bucket, and it's called S3 intro cat pics and then this random string. 
+We know that this is the one because it's got cat pics in the name, which is I'll logical resource name, and it's preceded by the name of the stack. 
+Note that in the template we didn't specify a physical name for this resource and when we do that, CloudFormation generates one randomly, and it's always named the name of the stack then the name of the logical resource and then a random string and that's to ensure that it's always going to be unique. 
+Now, CloudFormation templates can be much more complex than the one we've looked at. 
+If I move back over to my code editor, I've got another example here, which is a JSON CloudFormation template which can create a WordPress instance. 
+So this is something you can use to create a ready made blog, and I'll make sure that this is linked in the lesson description but as you can see this is much more complex. 
+It's got things in the parameter section. 
+If I scroll down, it's got things in the mapping section. 
+It's got resources so a security group and an EC2 instance, and then right down at the bottom it's also got something in the output section, which is the example I referred to earlier in this lesson, where it will actually generate the URL to access the Wordpress instance. 
+Now again, you won't need to worry about this level of detail for this lesson. 
+I just want to introduce some of the capabilities of CloudFormation. 
+Now stacks can also be updated, not just created. 
+When you update a stack, you're essentially updating the template used to create the stack and then using that new template to update the stack. 
+When you do that stack updates its logical resources if you add a logical resource to the template, then CloudFormation adds a new physical resource. 
+If you remove a logical resource then CloudFormation deletes the corresponding physical resource. 
+If you change a logical resource this is where the risk gets introduced because if you change a logical resource then CloudFormation will change the physical resource. 
+The way that CloudFormation handles this change depends on what the change is. 
+It can handle the change by making it without any disruption and an example of this is that you might add tags onto an S3 bucket and that's something that can happen with no disruption. 
+With the example of the WordPress instance that I was showing you if you decide to change the size of this EC2 instance. 
+So if I scroll up, there's a section of this EC2 instance where the size of the instance is defined. 
+So that's this instance type section and if I was to change this in the template and then update the stack, that would do a change with what's known as some disruption and in this case, that would be a restart of the EC2 instance to allow that size to change but some things if we wanted, for example, to change the name of the S3 bucket that requires a replacement of the resource. 
+The original resource is removed and a new one replaces it. 
+Now with the example of changing the name of an S3 bucket that might not be all that critical but if you're changing something on a database that could potentially cause data loss. 
+So let's look at an example of this. 
+If I go back to CloudFormation and I update the stack that we've got for this S3 bucket and I add an additional logical resource. 
+Let's have a look at what happens. 
+So look at the S3 intro stack and click on Update. 
+I'm going to replace the current template and I'm going to upload the new template and I'm going to pick S3 bucket version two. 
+So I'll select that and then follow the process all the way through. 
+This is adding an additional logical resource remember. 
+This time when I'm updating a stack on the review screen if I do scroll down to the bottom, I'm always able to see an overview of what exactly has been changed. 
+In this case, it's adding a new logical resource called dog pics and if I update the stack, it will go ahead and create a new S3 bucket. 
+If I hit refresh a couple of times, you'll see all of those events listed in the events tab for the stock and that physical resource will be created and then we go update complete and if I move back to the S3 console we'll be able to see that we've got the additional dog pics bucket with the same naming format that our cat pics one was created with earlier. 
+I mentioned at the start of this lesson how if you delete a CloudFormation stack, then it will automatically delete logical and physical resources associated with that stack. 
+So if I refresh this a couple of times we'll see that this stack disappears if I go back to the S3 console and refresh their we'll see that both of those CloudFormation generated S3 buckets have vanished. 
+Now, CloudFormation has a lot of advanced features and it doesn't make sense to cover them now in depth. 
+As we go through the course and you gain some exposure to all of the different AWS products, I'll be able to utilize CloudFormation to show you how we can provision those products in an automated way. 
+For now, I just want you to be aware of the architecture of CloudFormation. 
+The template contains a logical resources. 
+A template can be used to create a stack. 
+A stack contains those logical resources but also it creates and updates physical resources based on those logical resources. 
+When you update stack it updates those physical resources and when you delete the stack it will, of course, delete those physical resources as we just saw with those two S3 buckets. 
+Now again, there are some key points about CloudFormation that you do need to remember for the exam. 
+A CloudFormation template is written in JSON or YAML a template can actually create up to 200 resources if you need to create more then you can either nest templates together or create things using separate templates. 
+I'll detail that later in the course. 
+If a stack is deleted then by default, any resources it has created are also deleted. 
+A stack could be updated by uploading a new version of the template. 
+Any new logical resources will create new physical resources any removed logical resources will cause the stack to delete those physical resources and any changes to a logical resources will also change the physical resources and that will either be updating with no disruption, some disruption, or by replacing the physical resource entirely. 
+Now that is everything I wanted to cover about CloudFormation. 
+I wanted to give you a really basic introduction to the system. 
+We're going to use it extensively throughout the course, and I want to make sure that you're aware of exactly how it fits together from an architectural perspective. 
+At this point, you can go ahead and complete this video and next up, we've got a hands-on lab where you're going to use CloudFormation to create an S3 bucket. 
+So you're going to see how, rather than doing it manually, using the console, how you can use CloudFormation to actually create a resource. 
+Now, if you haven't followed along with this lesson, then this is an ideal opportunity to start up the hands-on lab and get some practical exposure to creating simple resources in AWS using CloudFormation. 
+So go ahead, mark this as complete. 
+When you're ready, join me in the hands-on lab where you'll get that practical experience.

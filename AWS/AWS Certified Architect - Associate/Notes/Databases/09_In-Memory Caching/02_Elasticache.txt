@@ -1,0 +1,22 @@
+
+Elasticache:
+Welcome back and welcome to this lesson where I want to really briefly touch on Elasticache. Elasticache is another in-memory cache. It's similar to the DynamoDB accelerator, or DAX, product but it's designed to operate with other products so products outside of DynamoDB. 
+So historically Elasticache was a product that was used with DynamoDB to offer in-memory caching. 
+So performance improvements for reads but AWS developed and released DAX. 
+So at this point, any new solutions which involved DynamoDB tend to prefer DAX. 
+For anything else, you've got the option of using Elasticache. 
+Now Elasticache is a managed in-memory data store. It's a key value store. It either supports simple key value data, or more complex but still simple data formats. 
+
+Essentially, Elasticache reports two different popular caching engines. We've got Redis or Memcached. So if you see any reference in the exam to Redis or Memcached, then you know you need to use the Elasticache product. 
+
+Use Cases
+So Elsaticache is used for two common use cases. 
+Either offloading database reads by caching responses, so rather than having to consulted AWS each and every time you can cache results and then deliver them from in-memory caches, and so that massively improved performance. 
+The other common use case for Elasticache is to store user session state. So I've talked earlier in the course about stateless service, how you can scale servers so moving the session state from the application servers themselves to something external and this is a common use case for Elasticache. 
+So you can store user session state using Elasticache and then your application servers are stateless and so they could be scaled in or out really fluidly based on demand. 
+So Elasticache can either be a performance enhancing tool or it can be used within fault tolerant architectures. 
+
+Example
+So this is a classic example. We've got clients entering a load balancer. The load balancer is load balancing across an auto scaling group of application servers, and then either the session status stored on Elasticache or it's used to cache read operations from a data store so massively improving the read scalability of an application or allowing session state to be stored off the application servers themselves. 
+
+Now at the associate level, you don't need to be aware of any more detail than this. It's only at the professional level where you're expected to have deep amounts of knowledge on Elasticache. More so it's not something that's really covered in the Solutions Architect Associate exam. I just want you to be aware what Elasticache does and that it supports both Redis and Memcached and if you know all of that, that you should have enough information to be able to appropriately select whether it's a correct or incorrect answer. At this point, we've covered everything that I wanted to cover in this lesson. I know it's been a super high level lesson, but I wanted to remain focused on topics that will appear in the exam. With things like this, I just want to give you the context, the surrounding knowledge, so you just have enough information to be able to exclude incorrect answers. So that's everything that I wanted to cover in this lesson, and it is the last lesson of the databases section of the course. In the next section, we're going to look at hybrid products, hybrid environments, hybrid solutions, and things that can assist with scaling AWS solutions. So it's going to be a great section of the course. So go ahead and mark this lesson as complete and when you're ready, you can join me in section seven of the course, which is hybrid and scaling.

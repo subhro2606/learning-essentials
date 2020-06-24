@@ -1,0 +1,56 @@
+Okay, welcome back and over the last two lessons, I've talked about two different connectivity options available to get access to private and public space services in AWS. At the start of this topic, I talked about virtual private networks. 
+In the last lesson, I talked about Direct Connect. 
+In this lesson I want to focus on when and where you choose between these two different products. 
+So there are certain situations where you're absolutely would choose a Direct Connect and there are certain situations where a VPN would make a better option and so briefly in this lesson, I want to talk about these different situations because you might find that useful for the exam. 
+So I'm going to start off by talking about Direct Connect. 
+
+Direct Connect:
+Direct Connect offers the best performance. 
+There's no arguing about that. 
+If you need a low latency connection, high speeds, and consistent performance, then you need to go with the Direct Connect. 
+Now there are many applications which might suit using a Direct Connect an example I often find his IP telephony or certain scientific applications that use real time telemetry. 
+If you need absolute lowest latency the highest performance possible maybe you're doing trading activities or financial analysis. 
+Anything that really relies on that low latency in consistency then you need to use Direct Connect. 
+Direct Connect is always going to be the preference if your absolute priority is the performance and consistency of that performance. 
+If you've got any situations where you need to transfer large amounts of data, then that's going to be cheaper than using a VPN.  So, of course, you've got that initial cost for setting up the Direct Connect.  There's an hourly charge, and you might have physical costs for provisioning connectivity between the DX location and your on premises locations. So with that aside, once you go past a certain point in the economies of using a Direct Connect coming to play. So with huge data volumes, if you need to move huge amounts of data around between AWS and your on premises locations then Direct Connect should absolutely be a preference. 
+Now Direct Connects obviously are a separate connection than your existing internet connection, and so there's no contention there. You don't have to worry about large transfers over the Direct Connect impacting the performance of your regular internet link. They're completely separate connections and that means, of course, that you don't contend for internet bandwidth allocation. So let's say that you might have a terabyte a month of transfer over your normal internet connection. 
+Well, if you've got any large transfers and you've got a VPN, you will be using part of that allocation. 
+If you got a Direct Connect, then it's going to be a completely separate transfer from your main internet connection and perhaps one of the most important restrictions relating to Direct Connect and one that features on the exam all the time is the provisioning time for Direct Connects, so their physical connections they take time to provision. 
+You've got to follow the AWS process. We start by creating a port request.  You've got to get that letter of authorization you got to hand that to the data center staff and get them to do a cross connect into your equipment or your partner's equipment, and then you got to arrange the transit from that DX location to any of your business premises. 
+
+
+VPNS:
+It's something that can take weeks or months. So if you've got an urgent requirement, something where you need to start accessing private AWS networking as soon as possible then you might not immediately be able to use Direct Connect but that's an interesting thing to keep in mind for the exam, because you can use VPNs as a starting point for this private connectivity. So you might face an exam question where it poses a situation, and it's obvious that you need to use a Direct Connect, but the time requirements might prevent you using a Direct Connect. 
+Maybe you've got this urgent requirement you need to have the connectivity in place within, say, three weeks. Now normally, this would prevent you using a Direct Connect but for the exam, remember, you can always use a VPN as the first step. Get the VPN deployed, get the network connectivity going, and then move on to using a Direct Connect once you've got it provisioned. So VPNs can meet urgent needs, urgent requirements they can actually be deployed in minutes. VPNs are also great if your cost constrained because they're cheap and economical to set up, they can utilize low end or consumer hardware. 
+
+Direct Connect requires BGP or the Border Gateway Protocol support, which is something that tends to be in higher cost routers so professional or enterprise grade routers.  If you're using low end or consumer grade hardware than VPNs tend to be much more accessible. 
+
+You might use VPNs if you're in situations where encryption so end to end encryption is absolutely required but of course, you can use a VPN over the top of a public VIF to get the benefits of the Direct Connect performance and this encryption.  So keep that in mind for the exam. 
+
+VPNs, of course, give you flexibility to change locations because they're a software product, because they're just a logical connection, it's easy to remove a VPN connection, create it going to a new location, and just continue the same network connectivity without your applications being aware of the change. 
+
+Combine VPN & DX Connect:
+High Availablity:
+Now VPNs as I talked about in the VPN lesson, you've got some options around high availability. 
+You can use a single tunnels between one customer gateway and one endpoint you can use to tunnels so between one customer gateway and two endpoints or you can provide two customer gateways with two connections two tools to each to both endpoints, and that's a fully mesh or fully highly available design, so VPNs are very flexible and can be configured to be very highly available but their reliability, of course, is directly aligned to how reliable your internet connection is because they operate over your existing internet connection. 
+Now, for the exam don't focus on an either/or style situation because, of course I'm going to stress this you can use VPNs and Direct Connect is part of the same architecture, so Direct Connects are not highly available by default, you could provisions another Direct Connect, but that is a lot of money to have sat there just being used as a backup, especially if you don't need the additional bandwidth. 
+So you've got the option of using a VPN as a cheaper, high availability option for your direct connect and this has another benefit because the VPN operates over your existing Internet connection and the DX is a separate connection. 
+Then, as well as having the VPN and the DX being backups for each other, you've got the physical connections also being different. 
+So you've got these completely different transit paths so that's really important to understand. 
+You could have two Direct Connects and also have an additional VPN. 
+So if you've got some really extensive availability requirements, there's nothing stopping you having multiple Direct Connects and one or more VPNs and then, of course, the most important things for the exam. I've mentioned these already. 
+Immidiate: 
+If you do need some form of connectivity immediately, but your long term business requirement does suit using a Direct Connect then you can use this VPN for immediate network connection and then move on to the Direct Connect when it's live and you can also use a VPN to add that encryption layer over the top of Direct Connect. 
+Now other than that, both of these products provide networking connectivity.  So from an application perspective, they won't be aware of which connection choice you made.  
+
+All you need to think about as a solutions architect is what your business requirements are. 
+What does your application need? What are its latency requirements? Does it need low latency? Does it need low latency consistently? Do you have high bandwidth or high transfer amount requirements for this application? They're all questions that you need to ask when you're selecting between VPN or Direct Connect but keep in mind from an application perspective, it doesn't really care whether you pick VPN or Direct Connect. 
+They're both networking connection products. 
+The only thing you need to think about is which of them is most appropriate but with that being said, that is everything that I wanted to cover in this lesson. 
+I just wanted to give you a brief explanation over some of the elements that might make your decision easier to select between a VPN and a Direct Connect. 
+
+
+I do expect that you might get one or two exam questions in this area, so I think it will be a valuable lesson. 
+Now at this point we have finished this topic, so we've finished up the VPN and Direct Connect topic of the course, the next topic I want to talk about the various different Snow products available as part of AWS. 
+So that's Snowball, Snowball Edge and Snowmobile. 
+Now, these products which allow you to transfer data en masse in and out of AWS and they're pretty important and they do feature on the exam, So go ahead, mark this lesson as complete, and when you're ready, you can join me in the next topic.

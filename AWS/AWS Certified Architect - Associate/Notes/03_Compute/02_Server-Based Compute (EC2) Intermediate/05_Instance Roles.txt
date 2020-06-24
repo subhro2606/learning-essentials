@@ -1,0 +1,169 @@
+EC2 instance roles are IAM roles that can be "assumed" by EC2 using an intermediary called an instance profile. An instance profile is either created automatically when using the console UI or manually when using the CLI. It's a container for the role that is associated with an EC2 instance. 
+The instance profile allows applications on the EC2 instance to access the credentials from the role using the instance metadata. 
+
+
+Instance roles allow the EC2 instance to assume that role and to gain access to temporary security credentials. 
+So this is the architecture. 
+What actually happens is you take a normal IAM role and an IAM role is something that can be assumed by an identity in AWS. 
+Now, the EC2 service is an identity, but applications running on the instance are not valid AWS identities, they're just applications and so what you need to do is create something that's known as an instance profile and an instance profile is essentially just a container for an IAM role that you can use to pass that role information to EC2. It's essentially just a translating container. It allows applications on EC2 to use that role on your behalf, so you're not just letting EC2 assume the role you're allowing the applications to utilize that role as well. 
+Now, creating the instance role and creating the instance profile are actually two different steps, and if you do this from the command line, you'll need to create them both separately. 
+
+
+A role has two things: a trust policy which defines who can assume that role and the permissions policy that gives the role permissions.
+Now that we've got this role set up so we've got the permissions policy and the trust policy shown as trust relationships here. 
+
+
+Suppose we create role with permission policy for an instance role of S3 read only from the console and associate apply it to an EC2 instance. This creates an instance profile of the same name as the role(since it's created from console) and associates this EC2 instance with this instance profile and thus the IAM role that has the associated permissions policy. 
+STS, also known as the security token service now, this is the service that's responsible for generating short term or temporary credentials whenever a role is assumed. 
+Suppose we login to the EC2 console as run the aws s3 ls command, the EC2 instance begins assuming the role. 
+The STS service every time that occurs, which is constantly while this role is associated with the instance, the STS service begins delivering short term temporary access credentials, and they're available from within the instance metadata. 
+Now that means that anything that's running inside the instance, has access to those temporary security credentials. 
+So now if I do an aws s3 ls and press enter, we get all the s3 buckets listed.
+So they're using temporary access credentials that are inside the instance metadata in order to interact with AWS. 
+
+
+Advantages of using Instance Roles:
+Now this presents a number of significant advantages. We are able to create a normal IAM role and an associated instance profile that I can associate that with 1, 10, or hundreds or even thousands of EC2 instances. Those instances work in conjunction with STS to generate temporary security credentials that are available inside that instance to applications running on that instance. 
+Now the key thing is that these are temporary security credentials, and they're rotated every time EC2 assumes this IAM role and so it means if this instance is exploited and the temporary credentials are leaked, it means that the impact of that is limited because they're not permanent credentials they expire periodically and so, even though you might have the credentials short term, once they do expire, you'd need to reassume the role to get access to new credentials and so, by using this temporary, rotating credential architecture, you offer a much improved security situation. 
+It also means that you don't need to worry about how you deliver credentials to these instances. 
+
+Disadvantages of IAM Roles:
+The only scenario where IAM roles really don't work is when a log in is required. So when a user needs to log in because, of course, IAM roles don't have any long term credentials. 
+
+Other ways of autheticating to AWS from inside EC2 instances include using AWS Configure and setting Credentials in Environment Variables.
+
+
+
+############################################################################################################################################
+Welcome back and in this lesson I want to talk about EC2 instance roles. 
+Now, I'm not going to be demonstrating this using one of the cloud playground accounts available in the Linux Academy platform because I'm going to be using IAM roles with account admin permissions and this is one of the things that is much easier and simpler to demonstrate from within my own AWS account. 
+It's not something you need to follow along in your own account because it is a relatively theoretical topic. 
+So just watching me do it on my account will be enough to give you the knowledge that you'll need for the exam and the real world. 
+So an instance role is essentially a type of IAM role, which could be used by EC2 and EC2 can use it by using an intermediary known as an instance profile. 
+So let me explain what I mean. 
+Earlier in the course I talked about IAM roles and they're an identity, which gets assume don't log in to a role, they are always something that you assume in order to get additional permissions. 
+So an EC2 instance role is just a role that could be assumed by EC2. 
+So I'm going to go ahead and create it just to demonstrate exactly what difference it makes. 
+Now, before I do that, I'm going to need to create an EC2 instance. 
+So I'm going to do that in my account to start with. 
+So I'm going to load the EC2 console. 
+I've got a default VPC already inside this account, so I'm going to use that. 
+So I'm going to pick Amazon Linux 2. 
+Pick a small instance size. 
+I'll go for T3.micro. 
+Make sure that this is in the default VPC and it's got a public IP address associated so use subnet setting enable I'll skip past add storage. 
+The default will be fine. 
+I won't have any tags. 
+For the security group, I'll create a new security group. 
+I'll call it instance role demo. 
+I use the same for the description as well. 
+Make sure it's got SSH enabled. 
+Coming from my IP only it's just a little bit more secure. 
+Go to review and launch. 
+Launch the instance. 
+I'll create an additional key pair. 
+I'll call it instance role. 
+I'll download that key pair and launch the instance what's have launched the instance. 
+I'm going to go to S3 quickly and I'm going to create an S3 bucket and I'm going to call this S3 bucket ac- and then instance role demo just so we can identify easily and I'll accept the rest of the defaults. 
+Hit create bucket and there we go AC instance role demo ready to go. 
+Now the reason I'm creating S3 bucket is will need a candidate AWS service just to interact with. 
+So we've seen S3 before. 
+We've not going to detail yet that comes later in the course but we do know what an S3 bucket is. 
+Now that's ready. 
+I'm going to go ahead and connect to this instance. 
+So, as always, I'll need to fix up the permissions on the PEM key first. 
+So I'll put this command into my clipboard, move across to my terminal, paste this in. 
+That's the permissions corrected and the second command, I can copy that into my clipboard and use that to connect to the instance, I accept the authenticity. 
+I'll be taken to the shell of this Linux instance. 
+Clear the screen makes it will be easier to see, and then I could go back to the console. 
+So an instance role is nothing special. 
+It's just an IAM role, but it's one that's been configured in a certain way to allow it to be used by EC2. 
+Now what type of scenarios you might want to use an instance role do vary but essentially it allows you to give an EC2 instance or any applications running on that instance permission to interact with AWS. 
+Now, an example of this is that EC2 instances do come with the AWS command line tools installed. 
+So, for example, if I wanted to run a list of every S3 buckets inside this region, I could go aws s3 ls and that would do an S3 listing. 
+So show every bucket available in this account. 
+Now, if attempt to do that, it's going to tell me that I don't have any credentials and that's logical because I haven't run AWS configure. 
+Running AWS configure would result in access keys being stored permanently on this EC2 instance and I might not want that this instance might be something that runs several applications or it might be an instance that's running a third party application or something that could even be exposed as this instance is to the public internet. 
+So if I configured any long term access credentials on this instance and it was available to the public internet, it could, in theory, be a security risk and instance roles are one way to avoid that. 
+Instance roles allow the EC2 instance to assume that role and to gain access to temporary security credentials. 
+So this is the architecture. 
+What actually happens is you take a normal IAM role and an IAM role is something that can be assumed by an identity in AWS. 
+Now, the EC2 service is an identity, but applications running on the instance are not valid AWS identities, they're just applications and so what you need to do is create something that's known as an instance profile and an instance profile is essentially just a container for an IAM role that you can use to pass that role information to EC2. 
+It's essentially just a translating container. 
+It allows applications on EC2 to use that role on your behalf, so you're not just letting EC2 assume the role you're allowing the applications to utilize that role as well. 
+Now, creating the instance role and creating the instance profile are actually two different steps, and if you do this from the command line, you'll need to create them both separately. 
+If you use CloudFormation, you'll need to create them both separately but if you do it from the console, it's one step. 
+Creating an instance role in the console so that's just a normal IAM role that's designed for EC2 to also creates an instance profile of the same name. 
+So let's look at that in practice. 
+I'm going to go to IAM and I'm going to create an EC2 instance role. 
+So I'll go to roles. 
+I want to allow an AWS service to assume this role, and I want it to be EC2. 
+
+Now there are other AWS services that can assume roles and we'll detail exactly how that works later in the course. 
+Specifically coming up in the serverless compute topic of the course is Lambda, so I'll be demonstrating exactly how Lambda uses roles in that topic but for now, I want to use EC2. 
+So now that I've selected EC2 I'll click permissions and I'm applying the permissions policy of this role, remember, a role has two things: a trust policy which defines who can assume that role and the permissions policy that gives the role permissions. 
+Now I want to give this role permissions to interact with S3. 
+So I'm going to type S3 to filter that down. 
+We could choose S3 full access, but for this demonstration, all I want to do is to be able to read S3. 
+So I'm going to pick Amazon S3 read only access, which gives just the necessary rights to interact with their S3 buckets and objects from a read only perspective. 
+So I'll select that, go to next tags, skip past that, and I'm going to name the role. 
+So I'm going to call the EC2 role. 
+Once I've named it, I can hit Create Role and that will make a specific type of IAM role specifically for EC2 but in addition, it will create an instance profile of the same name. 
+Now that's not surfaced from inside the console. 
+You can't see that in the console, but take my word for it. 
+It's actually created an instance profile of the same name and if you create it through the command line, you'll need to explicitly do that. 
+Now if we open up this EC2 role and go to trust relationships and then show the policy document, this is the part that controls who can assume the role and we allow EC2.amazonaws.com to assume this role. 
+So if you only want to the EC2 service to assume a role, then this would be enough but because we want the applications inside the instance to utilize it that's why we need this instance profile. 
+Now that we've got this role set up so we've got the permissions policy and the trust policy shown as trust relationships here. 
+Now we need to link this with the EC2 instance. 
+I want to draw your attention to the fact, though, that we're not actually linking this role up with the instance we're linking the profile of the same name that was also created when this role was made. 
+Now it used to be you could only change the instance profile or instance role associated with an instance when you first provisioned the instance but now you can change it after the fact. 
+So I'm going to go to running instances. 
+I'm going to select the instance I just created. 
+Now remember, this is the instance where I wasn't able to run AWS configure, so I'll go down to instance settings and I'll attach or replace and IAM role. 
+I can click on the dropdown and I'll be presented with a list of any applicable EC2 instance roles and I'll select EC2 role. 
+Now you'll know by now I'm a fan of teaching you the exact detail of how things work. 
+It's no more complicated for you to know that this dropdown is not actually a list of IAM roles. 
+It's a list of instance profiles. 
+So they're the same name, so they look the same. 
+You don't see all of the IAM roles in this account. 
+You only see those for EC2 and the reason you only see those for EC2 is that they're the only ones that have created an instance profile along with role and so this list is actually the list of instance profiles available within this account. 
+So I'm going to select the EC2 role which remember, carries the permissions policy of S3 read only so I'll select that role and I'll click on apply. 
+Now, this associates this EC2 instance with this instance profile and thus the IAM role that has the associated permissions policy. 
+Now, what happens at this point is the STS, also known as the security token service now, this is the service that's responsible for generating short term or temporary credentials whenever a role is assumed. 
+What happens at this point is that the EC2 instance begins assuming the role. 
+The STS service every time that occurs, which is constantly while this role is associated with the instance, the STS service begins delivering short term temporary access credentials, and they're available from within the instance metadata. 
+So remember the previous lesson where I talked about instance metadata and how it's really important. 
+This is one of the reasons why. 
+So the STS service delivers temporary security credentials into that instance. 
+Now that means that anything that's running inside the instance, has access to those temporary security credentials. 
+So now if I do an aws s3 ls and press enter I no longer get the requirement to run AWS configure and that's because the AWS command line tools are aware of the metadata of an EC2 instance, and if it's present, they'll use that information to access AWS. 
+So they're using temporary access credentials that are inside the instance metadata in order to interact with AWS. 
+Now, the AWS command line tools will use a number of different sources for authentication. 
+The first that you're familiar with so far is the statically configured information when you run AWS configure. 
+So the access credentials that you enter if you run an AWS configure. 
+You're also able to set AWS credentials. 
+So the access key ID and the secret access key set, though, is inside environment variables and when you do that, when you name the environment variables a certain name then the command line tools can interact using those and then obviously this way is that they can access the metadata inside the instance and interact that way. 
+Now this presents a number of significant advantages. 
+I'm able to create a normal IAM role and an associated instance profile that I can associate that with 1, 10, or hundreds or even thousands of EC2 instances. 
+Those instances work in conjunction with STS to generate temporary security credentials that are available inside that instance to applications running on that instance. 
+Now the key thing is that these are temporary security credentials, and they're rotated every time EC2 assumes this IAM role and so it means if this instance is exploited and the temporary credentials are leaked, it means that the impact of that is limited because they're not permanent credentials they expire periodically and so, even though you might have the credentials short term, once they do expire, you'd need to reassume the role to get access to new credentials and so, by using this temporary, rotating credential architecture, you offer a much improved security situation. 
+It also means that you don't need to worry about how you deliver credentials to these instances. 
+Imagine if we didn't have this feature, you'd need to find a way of delivering access keys into an instance. 
+Now maybe you'd run a user data script to deliver these in but keep in mind they're not encrypted when you do that, and they're accessible to applications on the instance, and these would be long term credentials, so they're much more dangerous. 
+You could store the credentials in a file on S3, but then you need to think, how would I give access to S3? How could you initially give that instance the ability to access the object with the credentials in? Using IAM roles in this way offers a really great way to deliver security credentials to AWS services. 
+You don't have to worry about supplying the actual credentials. 
+You can allow the service to assume the role on your behalf and be given temporary security credentials and you'll see that that's the way that a lot of AWS services work. 
+Whether it's EC2 or Lambda or any other service that interacts on your behalf, it's always preferable to use IAM roles. 
+Remember that for the exam. 
+Whenever you have a preference, use IAM roles. 
+The only scenario where IAM roles really don't work is when a log in is required. 
+So when a user needs to log in because, of course, IAM roles don't have any long term credentials. 
+Now as well as attaching an IAM role to this instance I could go to instance settings and attach and replace another. 
+I could change it back to no role. 
+I could even change the role and then apply it and then when that role gets assumed again, it would get a new set of temporary access credentials that would have the new role's permissions policy. 
+So it's not a one time only thing you can associate roles now, with a pre running instance, you can change it and then disassociate the role afterwards. 
+It's a lot more flexible than supplying the credentials of a particular IAM user into the instance in a static way. 
+So whenever possible, whenever you get exam questions, whenever you're doing this in production, whenever you can use instance roles. 
+Now that being said, that's everything I wanted to cover in this lesson about using instance roles. 
+Go ahead, mark this lesson as complete and then join me in the next topic, which is EC2 advanced, where we'll be covering the last few really advanced topics of EC2 that you'll need for the exam.

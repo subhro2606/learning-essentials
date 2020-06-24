@@ -1,0 +1,7 @@
+setup.py
+src/words/__init__.py
+src/words/generator.py
+src/words.egg-info/PKG-INFO
+src/words.egg-info/SOURCES.txt
+src/words.egg-info/dependency_links.txt
+src/words.egg-info/top_level.txt

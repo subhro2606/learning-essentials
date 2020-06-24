@@ -1,0 +1,68 @@
+https://www.w3resource.com/python-exercises/collections/index.php
+
+Python Collections [ 16 exercises with solution]
+[An editor is available at the bottom of the page to write and execute the scripts.]
+
+Collections module implements specialized container datatypes providing alternatives to Python's general purpose built-in containers, dict, list, set, and tuple.
+
+1. Write a Python program that iterate over elements repeating each as many times as its count. Go to the editor
+
+Click me to see the sample solution
+
+2. Write a Python program to find the most common elements and their counts of a specified text. Go to the editor
+
+Click me to see the sample solution
+
+3. Write a Python program to create a new deque with three items and iterate over the deque's elements. Go to the editor
+
+Click me to see the sample solution
+
+4. Write a Python program to find the occurrences of 10 most common words in a given text. Go to the editor
+
+Click me to see the sample solution
+
+5. Write a Python program that accept some words and count the number of distinct words. Print the number of distinct words and number of occurrences for each distinct word according to their appearance. Go to the editor
+
+Click me to see the sample solution
+
+6. Write a Python program that accept name of given subject and marks. Input number of subjects in first line and subject name,marks separated by a space in next line. Print subject name and marks in order of its first occurrence. Go to the editor
+
+Click me to see the sample solution
+
+7. Write a Python program to create a deque and append few elements to the left and right, then remove some elements from the left, right sides and reverse the deque. Go to the editor
+
+Click me to see the sample solution
+
+8. Write a Python program to create a deque from an existing iterable object. Go to the editor
+
+Click me to see the sample solution
+
+9. Write a Python program to add more number of elements to a deque object from an iterable object. Go to the editor
+
+Click me to see the sample solution
+
+10. Write a Python program to remove all the elements of a given deque object. Go to the editor
+
+Click me to see the sample solution
+
+11. Write a Python program to copy of a deque object and verify the shallow copying process. Go to the editor
+
+Click me to see the sample solution
+
+12. Write a Python program to count the number of times a specific element presents in a deque object. Go to the editor
+
+Click me to see the sample solution
+
+13. Write a Python program to rotate a Deque Object specified number (positive) of times. Go to the editor
+
+Click me to see the sample solution
+
+14. Write a Python program to rotate a Deque Object specified number (negative) of times. Go to the editor
+
+Click me to see the sample solution
+
+15. Write a Python program to find the most common element of a given list. Go to the editor
+
+Click me to see the sample solution
+
+16. Write a Python program to perform Counter arithmetic and set operations for aggregating results. Go to the editor

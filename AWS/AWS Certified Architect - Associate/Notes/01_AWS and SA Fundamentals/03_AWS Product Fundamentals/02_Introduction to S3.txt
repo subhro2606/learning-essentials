@@ -1,0 +1,203 @@
+S3: Simple Storage Service(S3) is a gobal object Storage platform that can be used to store objects in form of text files, photos, audio, movies, large binaries or other types.
+Global Service.
+Object Storage.
+
+Bucket: 
+Bucket is the basic entity inside S3, which is a container which can store things 
+Buckets are specific to a region and the data inside a bucket is replicated accross.
+Any data that's stored inside these buckets will be replicated across the availability zones in that region. 
+By default, though as a protective mechanism the bucket is blocked from all public access. 
+You've got buckets inside an account those buckets are containers. 
+Bucket names have to be globally unique 
+Minimum of three and maximum of 63 characters—uppercase  or underscores 
+Must start with a lowercase letter number and can't be formatted as an IP address (1.1.1.1) 
+Default 100 buckets per account, and hard 1,000-bucket limit via support request 
+Unlimited objects in buckets Unlimited total capacity for a bucket
+
+
+Objects:
+So a single bucket is capable of storing multiple objects. Bucket can have folders(A bucket is actually a flat structure, it can't contain folders, they are just files that look like folders).
+Objects are similar to files stored on a file server. It could be empty or it can vary in size. Objects are differnt that files in that they're a name value or a key value pair. An object's key is its name. An object's value is its data 
+Size: 0 to 5 TB 
+
+Exam Facts:
+Bucket names have to be globally unique 
+Minimum of three and maximum of 63 characters—uppercase  or underscores 
+Must start with a lowercase letter number and can't be formatted as an IP address (1.1.1.1) 
+Default 100 buckets per account, and hard 1,000-bucket limit via support request 
+Unlimited objects in buckets Unlimited total capacity for a bucket.
+An object's key is its name.
+An object's value is its data.
+An object's size is from o to 5 TB 
+
+
+Use Cases of S3:
+(+)If you need data to be safe and secure then S3 is perfect, it's not vulnerable to a single AZ failure impacting it. 
+(+)In scenarios where you need scalablity, performance & fault tolerance. S3 can tolerate large amounts of failure within a region and still work correctly. It also scales quite well. S3 largely handles any performance or scaling. 
+(+)Share data inside AWS. So if you have multiple servers which need to read and write, objects may be shared media for a web application or maybe patient's scans or other medical imaging for a medical application then again, S3 is perfect. 
+(+)If you need to offer this data to the public internet at scale then S3 is brilliant. 
+
+Cases where S3 is not to be used:
+(-) S3 can't be easily mounted into a server as a network drive letter or mount point. Though there are hacks which allow this, but for the exam and probably for production, just don't. 
+(-) S3 buckets can't be attached to a server as a disk. That's something that's called block storage and S3 is object storage. 
+
+#####################################################################################################################################
+Welcome back in this lesson, I want to introduce one of the oldest products available within AWS and also one of the most useful and common services to use and that is simple storage service, which is also known as S3. 
+Now S3 is an object storage system, and at a high level, you can think of this like a file server, which you might have used in a corporate environment only one which can deliver extreme levels of performance, do so globally, and cope with a near unlimited amount of data. 
+S3 is great for storing text files, photos, audio files, movies, large binaries, logs, and even huge scale data sets covering mapping, weather analysis, and even large scale genomics. 
+It's essentially perfect for anything where the primary requirement is to store and provide access to content using web style protocols, it isn't a file server, so you can't interact with it in the way you can with a file server but you can access objects using a web browser from the command line or via any applications specifically designed for S3. 
+Now, to help illustrate the architecture that's on the right of the screen now I want to go ahead a log in to an AWS account and to do that, I'm going to use the cloud playground feature available on the Linux Academy website. 
+So I'll go into CloudSandboxes, I'll provision AWS sandboxes access, and once my details are available, I log in to the account. 
+I'll be using cloud_user for the username and then the custom password generated for me by the Linux Academy website. 
+Okay, so you can access S3 in a number of ways. 
+You might have it listed in your recently visited services everything is always available using the all services dropdown or alternatively, you can click on the services dropdown at the top of your screen and type S3 in the search box to locate it. 
+So I'll go ahead and open that in a new tab and if you are going to be using S3 regularly, you've also got the option of clicking on the pin, locating the S3 service, and then pinning it to the task bar at the top of the screen and that just provides a nice way of getting access to it or any other services that you're going to be using regularly. 
+Now once we're at the S3 console, you'll note that you don't get the option to select the region from the region drop down. 
+That's because S3 is a global service. 
+
+
+
+Buckets:
+You'll be able to select the region when you create an S3 bucket. 
+The basic entity inside S3 is the bucket, and it's a good physical comparison to make, because a bucket in S3 is a container which can store things just like its physical counterpart. 
+Now buckets have a name and that name needs to be unique. 
+On the right of your screen now I've got three example buckets cat pics, dog pics, and movies. 
+The name needs to be unique not just in the region that you're in, not even in your account, but globally across all regions in all AWS accounts and when you create a bucket you'll pick a region for that bucket to be located in. 
+So let's look at an example. 
+I'm going to make a bucket to store some cat pictures, so I'll go ahead and click on Create Bucket. 
+Now, this lesson is only an introduction to S3. 
+So I'm not going to be covering every detail about creating a bucket on uploading objects into that bucket. 
+So I'll be talking about the important elements as I create this bucket, but I will be skipping past anything that I will be covering later in the course. 
+The first step of creating bucket to pick a bucket name. 
+So if I do pick something obvious like cat pics an attempt to create this bucket we'll see that the bucket name already exist just to reiterate, it needs to be globally unique but I do want cat pics to be in the name because that's what it's going to store. 
+So I'm going to try cat pics-ac which are my initials. 
+I'm going to select U.S. 
+East, North Virginia because that's the region name that I want this bucket is going to be in and attempt to see if this name is taken. 
+So click on next. 
+In this case, the name is available. 
+So I'm good to go now for most of these values, you don't need to worry about them at this stage. 
+I will be covering all of the features and different things you can configure about S3 later on in the course. 
+So I'm just going to skip past this for now. 
+S3 is a service where you can make these objects available to the public internet or indeed, any identity that you choose. 
+By default, though as a protective mechanism the bucket is blocked from all public access. 
+So this is a feature that was implemented relatively recently by AWS and if you do enable this setting then it is impossible to allow public access to this bucket and it is the default so it's something to keep in mind. 
+For now, I'm going to leave this as default because it won't affect this lesson, and I'll click on next. 
+We'll be asked to review the settings. 
+They're all good and we'll click on Create Bucket. 
+So at this stage we created the bucket and remember a bucket is simply a container in S3. 
+It doesn't itself cost any money. 
+It's just something that contains other things. 
+I'm going to talk about those momentarily. 
+Now I could also create another bucket in this account. 
+So let's do that. 
+I'll go ahead and create bucket. 
+This time I'm going to be inclusive. 
+So I'll pick dog pics-ac and click on next. 
+Assuming nobody's taking that name, which they haven't I'll skip through to the end of this and create bucket now when you store anything inside S3, it's replicated across availability zones in that region. 
+In this particular example I've created the catpics and dogpics buckets in U.S. 
+East, North Virginia. 
+So any data that's stored inside these buckets will be replicated across the availability zones in that region. 
+So if you need a resilient way to store data inside AWS, then S3 should be a candidate to do so. 
+
+
+Objects:
+Now buckets are designed to store things and they store objects. 
+So a single bucket is capable of storing multiple objects. 
+So let's go in and take a look. 
+Now, I'm going to introduce a concept at this stage which might be slightly to technically deep for the associate certification but I think it's an advantage to know this straight away. 
+A bucket is actually a flat structure. 
+It can't contain folders. 
+Now you might note that there is a create folder button at the top of the UI. 
+So let's see what that does if I click on Create Folder and I type Winky, which is the name of one of my cats, and then click on Save. 
+It does look to have created a folder, but it's not actually done that it's just created an object which represents this folder. 
+This will become more and more important as we go through this course when we interact with S3 in a more technically deep way. 
+For now, just keep in mind that whenever you do see folders or folders within folders or even deeper levels of nested folders, they're not really folders. 
+They're just files that S3 shows as a folder. 
+So at this stage, the difference probably doesn't matter. 
+Even though it's not strictly a folder, it does behave like one but as you proceed and learn more and more about AWS and potentially even take the professional or the specialty certifications further down the road, it'll become critical to understand how S3 really works and I wanted to introduce this at this stage, so you don't need to relearn this architecture further down the road. 
+
+Buckets can store an unlimited number of objects and can also store an unlimited amount of data. 
+The name of objects need to be unique in terms of where they're located, so I could have an object called cat.jpg directly inside the bucket and then also one inside the Winky folder, and that would be fine but I couldn't have two objects, both called cat.jpeg, at the top level of the bucket so it needs to be unique. 
+Now an object in many ways is just like a file that you would store on a file server. 
+It could be empty. 
+It could be a short text file, the whole business report, a large movie, or even a big data sized data set. 
+Objects are actually slightly different than a file in that they're a name value or a key value pair. 
+The object key is its name. 
+The value is the data of the object, so let's upload some objects and just see how they look inside the console. 
+So let's click on upload and then add files and I'm going to select a number of objects to upload to this bucket. 
+For this example, it's going to be a picture of each of my four cats and I'm just going to skip all the way through without looking any of these options because we're going to follow up and cover these in detail later in the course. 
+For now, I'm going to accept all of the defaults and select to upload these objects. 
+So these are the four objects I have uploaded the pictures of my cats they look like files and for the most part, they behave like files. 
+If I click on one of these objects and then click on open, I'm able to see that is just an image of one of my cats, and I can open it in a web browser using HTTPS. 
+Now, for the most part, objects do behave like files they do add additional features above and beyond what a file is able to do. 
+One example of that is if I click on the properties tab for this particular object, I'm able to select metadata, so an object allows you to attach additional metadata. 
+It might be S3 managed metadata or it could be custom metadata that you, as the user of S3 can add. 
+So if you're using an S3 bucket to store data from a third party application, then you might want to use it to store a file ID, a customer ID, or some other customer related metadata that attaches itself to this object. 
+So it's a way in, which S3 can integrate with any third party applications and don't worry, I'll be covering this in much more technical depth in the storage section of this course when I cover all of the features of S3. 
+So I've mentioned how an object is actually a key and a value well, the value part which represents the data of that object. 
+So in this particular case, it's the binary data for the image Penny.jpeg. 
+The data could be anywhere in size from zero bytes to five terabytes. 
+So that's 5,000 gigabytes or five million megabytes. 
+So pretty big. 
+There are lots of aspects about storing objects in S3 that we won't cover in this lesson. 
+It's feature rich, and you're able to select from different types of storage. 
+You're able to select encryption, various different types of replication, but for now, I just want you to look at this from a high level architecture perspective. 
+
+
+
+
+You've got buckets inside an account those buckets are containers. 
+They contain objects, objects are keys, and values. 
+The key is the name of the object, so penny.jpeg and then the value is the data that the object stores. 
+In this case the image data, which is a picture of my cat Penny. 
+Now, when objects are in a bucket they could be accessed over HTTPS. 
+They can even be made public or presented as a website and I'll be talking about all those things in the storage section of the course. 
+One of the most important elements to understand early on with S3 is when and where you would use it as a product. 
+I mentioned at the start about S3 replicating data across availability zones in a region, and that's a huge part of the value that S3 adds. 
+If you need data to be safe and secure then S3 is perfect, it's not vulnerable to a single AZ failure impacting it. 
+It can tolerate large amounts of failure within a region and still work correctly. 
+It also scales. 
+You don't need to be concerned about the performance because S3 largely handles any performance or scaling. 
+There are exceptions, but we'll cover those later in the course. 
+S3 is also great if you need to share data inside AWS. 
+So if you have multiple servers which need to read and write, objects may be shared media for a web application or maybe patient's scans or other medical imaging for a medical application then again, S3 is perfect. 
+If you need to offer this data to the public internet at scale then S3 is brilliant. 
+Now what it's not great for is that it can't be easily mounted into a server as a network drive letter or mount point. 
+
+There are hacks which allow this, but for the exam and probably for production, just don't. 
+S3 buckets are also not something that you can attach to a server as a disk. 
+That's something that's called block storage and S3 is object storage. 
+They're two very different things, and I'll be covering what block storage is in the EC2 topic of the course. 
+Now I've covered everything that I want to cover about S3 at this super high level. 
+I just wanted to introduce it as a product because before I talk about it in detail in the storage section of the course, I will mention it in other sections because S3 has many uses throughout the AWS product set and so I just want to make sure that you're aware of what S3 is and what its architecture is. 
+So the buckets, the objects, and then what an object actually is. 
+Now, at this point, I want to introduce this icon that's at the bottom of this page of the diagram. 
+This icon is something you'll see featured throughout the Orion Papers, and it's actually an icon that represents additional information that's relevant to the exam. 
+So if I click on this in this particular case, these are some facts and figures about S3 from a fundamental perspective that might help you in the exam. 
+So bucket names have to be globally unique, bucket names are a minimum of three and a maximum of 63 characters. 
+No uppercase. 
+No underscores. 
+They must start with a lowercase letter or number and can't be formatted like an IP address. 
+Now you've got a default of 100 buckets per account and a hard limit of 1,000 buckets. 
+This is important because in the exam, if you get a question, for example, where you might be looking to design an application that stores data for, say, 10,000 medical patients, you might be faced with one of the answers to that question being that you would create a bucket for each one of those patients. 
+Now, you know that there is a hard bucket limit per account. 
+You know that you can't use S3 in that way. 
+So these facts and figures are things that will influence which answer you pick in the exam so you can't create more than 1,000 buckets but there's nothing to stop you using a single bucket and then creating thousands, tens of thousands, or even millions of these folders and of course, now you know that they're not really folders, and that will really help you answer questions later on as we proceed throughout the course. 
+Now you can store an unlimited number of objects in buckets. 
+The bucket can have unlimited total capacity, so a single object can be anywhere from 0 to 5 terabytes but because you can store unlimited objects in a bucket you can have unlimited capacity inside a bucket. 
+Now, you might hear me refer to an object name or an object key. 
+They're basically the same thing. 
+They both represent the name of the object. 
+If I talk about an object value or an object data that represents everything else. 
+So in the examples of these cat pictures, it represents the binary data as well as any associated metadata or other data around the object and all of that will become much clearer when I talk about S3 in detail in the storage section of the course. 
+At this point, that is everything I wanted to cover. 
+I just wanted to introduce S3 at a high level. 
+Now do feel free to use the Linux Academy Cloud Playground if you do want to experiment with S3 in any way within an account that we provision. 
+Sso you've got no risks of any costs making damaging changes. 
+If you do it inside these environments because once they do terminate they have an auto shutdown and once they do terminate, we clean these accounts and make them available to the next student. 
+So don't worry about using these accounts for experimentation. 
+That's probably an ideal use for them. 
+Now in the next lesson we're going to cover an AWS product called CloudFormation which is an automation tool. 
+The reason that I'm covering this at this early part of the course is we're also going to be using this to support many of other lessons in the course. 
+So straight after this we've got the CloudFormation lesson and then straight after that, we've got a hands on lab, which uses both CloudFormation and S3, so you'll get an opportunity to experiment with both. 
+For now go ahead, mark this lesson as complete and when you're ready, move on to the next.
