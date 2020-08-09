@@ -1,0 +1,15 @@
+A lot of people who start competitive programming don’t really have a good practising strategy so they don’t really become better at solving problems and it becomes frustrating for them even leading them to quit in some cases. 
+
+So having the right practising strategy is very important.
+In this video, I am going to tell you the practising strategy you should follow to get better at Competitive Programming.
+
+I will also do a Q&A for the next video. So post your questions in the comments below! Please see if someone has the same question as you before posting and thumbs up that instead.
+
+Links to Resources:
+
+Codeforces - https://www.codeforces.com
+Atcoder - https://atcoder.jp/
+Competitive Programmer's Handbook - https://cses.fi/book/book.pdf
+SPOJ - https://www.spoj.com/
+Massive List of Data Structures / Algorithms - https://qr.ae/TWv5qJ
+

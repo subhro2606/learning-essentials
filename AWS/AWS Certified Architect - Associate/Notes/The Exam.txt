@@ -1,4 +1,0 @@
-https://linuxacademy.com/cp/courses/lesson/course/4444/lesson/1/module/341
-
-https://aws.amazon.com/certification/certified-solutions-architect-associate/
-https://d1.awsstatic.com/training-and-certification/docs/AWS_Certified_Solutions_Architect_Associate_Sample_Questions.pdf
