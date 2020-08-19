@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Absolute Positioning</title>
+  <style media="screen">
+    body {
+      margin: 0px;
+    }
+
+    .absolute {
+      height: 600px;
+      width: 600px;
+      background-color: grey;
+      position: relative;
+      /*Horizontally Centers the element*/
+      margin: 0 auto 0 auto;
+
+    }
+
+    .red {
+      height: 200px;
+      width: 200px;
+      background-color: red;
+      position: absolute;
+      right: 0px;
+      bottom: 0px;
+    }
+
+    .yellow {
+      height: 200px;
+      width: 200px;
+      background-color: yellow;
+      position: absolute;
+      /*This absolute positioning, positions the image 200px from the left and 200px from the top of the parent element*/
+      left: 200px;
+      top: 200px;
+    }
+
+    .blue {
+      height: 200px;
+      width: 200px;
+      background-color: blue;
+    }
+
+
+    @media(max-width:900px) {
+      /*When screensize of the browser/viewport is less than or equal to 900 change the background color of absolute div to green*/
+      .absolute {
+        background-color: green;
+      }
+
+
+    }
+  </style>
+</head>
+
+<body>
+  <div class="absolute">
+    <div class="red">
+
+    </div>
+    <div class="blue">
+
+    </div>
+    <div class="yellow">
+
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+/*****************************Tag Selector**********************************/
+h1{
+  color: red;
+}
+img{
+  background-color: red;
+}
+/*****************************class Selector**********************************/
+.green{
+  background-color: green;
+}
+.red{
+  background-color: red;
+}
+img:hover{
+  background-color: gold;
+}
+/*****************************id Selector**********************************/
+#secondparagraph{
+  color: blue;
+}

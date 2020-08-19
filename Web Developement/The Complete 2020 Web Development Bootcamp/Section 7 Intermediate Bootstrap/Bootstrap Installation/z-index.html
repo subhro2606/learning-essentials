@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Z-Index</title>
+  <style media="screen">
+    div {
+      height: 100px;
+      width: 100px;
+      position: absolute;
+    }
+
+    .red {
+      background-color: red;
+      z-index: 0;
+    }
+
+    .yellow {
+      background-color: yellow;
+      left: 30px;
+      top:30px;
+      z-index: 1;
+    }
+
+    .blue {
+      background-color: blue;
+      left: 20px;
+      top: 20px;
+      z-index: -1;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="red">
+
+  </div>
+  <div class="yellow">
+
+  </div>
+  <div class="blue">
+
+  </div>
+
+</body>
+
+</html>

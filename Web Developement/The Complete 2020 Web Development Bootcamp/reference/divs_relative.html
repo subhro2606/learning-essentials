@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+  <html lang="en" dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+    <title>Relative Positioning</title>
+    <style media="screen">
+    body{
+      margin: 0px;
+    }
+      .absolute {
+        height: 600px;
+        width: 600px;
+        background-color: grey;
+        position: relative;
+        margin: 0 auto 0 auto;/*Horizontally Centers the element*/
+      }
+
+      .red {
+        height: 200px;
+        width: 200px;
+        background-color: red;
+        position: relative;
+        /*This relative positionings, pushes the image 400px from the top to where it should have originally been
+        and this doesn't affect the position of any other element*/
+        top:400px;
+        left:400px;
+      }
+
+      .yellow {
+        height: 200px;
+        width: 200px;
+        background-color: yellow;
+        position: relative;
+        bottom: 200px;
+        left: 200px;
+      }
+
+      .blue {
+        height: 200px;
+        width: 200px;
+        background-color: blue;
+        position: relative;
+        bottom: 200px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="absolute">
+      <div class="red">
+
+      </div>
+      <div class="blue">
+
+      </div>
+      <div class="yellow">
+
+      </div>
+    </div>
+  </body>
+
+  </html>
