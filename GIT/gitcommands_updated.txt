@@ -1,0 +1,126 @@
+#Update Git for Windows 
+git update-git-for-windows
+
+#Initialize a folder as a git repository
+git init
+
+#Adds a file to the staging area(This is the area a file is in before it's pushed into the repo)
+git add index.html
+
+#Removes a file from the staging area
+git rm --cached index.html
+
+#Adds all files in the current folder to the staging area
+git add .
+
+#Removes all files/folders in the current staging area
+git rm -r --cached .
+
+#Add files from the staging area to the respository
+git commit
+
+#Add files from the staging area to the respository. This would add the comment without opening VIM
+git commit -m 'Changed app.js'
+
+#Compares the files in the staging area with the files present in the working directory
+git diff
+
+#Checks out/retrives the last staged(if that's not been commited yet) or committed version of a file.(Generally used if files are inadvartently updated)
+git checkout page2.txt
+
+#See the different commits made
+git log
+
+
+#Adds a remote respository to repository name as "origin"
+git remote add origin https://github.com/subhro2606/myappsample.git
+
+
+#Pushes all the details from "master" to the "origin" repository
+#-u option syncs the local with the remote respository, "origin" ia the name of the remote and master is name of local
+#master is the default branch for all commits
+git push -u origin master
+
+#Allows pulling from remote with unrelated commits(NOT RECOMMENDED)
+git pull origin master --allow-unrelated-histories
+#Used when encountered error "The current branch master has no upstream branch."
+git push --set-upstream origin master
+
+
+# All file names specifed in the gitignore file are not committed to the git. You can use wildcards(*) in the names of files
+.getignore
+
+
+#Clone from a repository
+git clone https://github.com/subhro2606/myappsample.git
+
+
+###Branching tutorial####
+
+#View git branches
+git branch
+
+#create a new branch
+git branch experiments
+
+#check out the new branch
+git checkout experiments
+
+#Do necessary modifications and commit
+
+#switch back to the old master branch
+git checkout master
+
+#merge the branches
+git merge experiments
+
+#now push changes to the origin
+
+
+###Forking & Pull Request###
+
+Forking: Copying github repositories owned by other account to your own account and then making changes to it
+Pull Request: Making a request to the owner account to merge the changes you made to your copied repo on your account.
+
+
+
+
+*******************************
+#.gitignore whatever files, folders are to ignored for adding into the staging area or repo needs to be specified here
+touch .gitignore
+
+#Creates a new branch "login"
+git branch login
+
+#Switches to branch "login"
+git checkout login
+
+#Switches to branch "master"
+git checkout master
+
+#Merges branch "login" with the current branch you are in (-m option for commit message)
+git merge login
+git merge login -m "Commit Message"
+
+#Lists the remote repositories
+git remote
+
+#Adds a remote respository to repository nam as "origin"
+git remote add origin https://github.com/subhro2606/myappsample.git
+
+#Pushes all the details from "master" to the "origin" repository
+git push -u origin master
+
+#Clone from a repository
+git clone https://github.com/subhro2606/myappsample.git
+
+#Pulls all the recent changes from a repository
+git pull
+
+#Formatting readme.md
+https://docs.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax
+
+
+#Set up the user name and password
+git config --global user.name 'Subhrajit Sadhukhan'
+git config --global user.email 'subhro26062gmail.com'
