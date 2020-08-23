@@ -1,0 +1,22 @@
+<%- include('header'); -%>
+<body>
+  <div class="box" id="heading">
+    <h1><%=day%></h1>
+  </div>
+
+  <div class="box">
+    <% todoItems.forEach(function(item,index){%>
+    <div class="item">
+      <input type="checkbox">
+      <p><%=item%></p>
+
+    </div>
+    <%}) %>
+    <form class="item" action="/" method="post">
+      <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
+      <button type="submit" name="button" value="<%=page%>">+</button>
+    </form>
+
+  </div>
+</body>
+<%- include('footer')-%>
