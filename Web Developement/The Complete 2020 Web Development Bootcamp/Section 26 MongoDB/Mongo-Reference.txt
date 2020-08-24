@@ -1,0 +1,162 @@
+Mongo Installation
+
+After installing Mongo create the below directories. This is where the mongo stores data by default:
+
+C:\data\db
+
+Create a .bash_profile file in the home location or you can update the Environment variables.
+
+cd ~
+touch .bash_profile
+Add the below lines in the file
+
+alias mongo="/c/Program\ Files/MongoDB/Server/4.4/bin/mongo.exe"
+alias mongod="/c/Program\ Files/MongoDB/Server/4.4/bin/mongod.exe"
+
+
+To start mongo server:
+
+mongod
+
+To open mongo shell:
+
+mongo
+
+To view databases:
+
+show dbs
+
+To view help
+
+help
+
+Create/Use a new db:
+
+use <dbname>
+
+View the current database that's selected
+
+db
+
+Collections: Similar to Table in the RDS world
+
+Document: A single record(like a single row)
+
+This creates the new showDB
+
+use shopDB
+
+Adding records in Mongo
+
+Create or insert operations add new documents to a collection. If the collection does not currently exist, insert operations will create the collection.
+
+db.products.insertOne({_id: 1, name: "Pen", price: 1.20});
+db.products.insertOne({_id: 2, name: "Pencil", price: 0.80});
+
+
+Updating Records in Mongo
+
+Update stock field to 32 for document with _id:1
+
+db.products.updateOne({_id:1},{$set:{stock:32}})
+
+
+Deleting records in Mongo
+
+db.products.deleteOne({_id:2})
+
+
+
+Shows the Collections in the current database
+
+show collections
+
+View all the documents in the products collection
+
+db.products.find()
+
+View all the documents with name equals "Pencil"
+
+db.products.find({"name":"Pencil"})
+
+View all the documents in the products collection with price greater than 1
+
+db.products.find({price:{$gt:1}})
+
+Projects are used to control the fields that are retrieved, for example here only the "name" would be retrieved
+
+db.products.find({price:{$gt:1}},{name:1})
+
+By default "_id" is always retrieved. To stop that use the following
+
+db.products.find({price:{$gt:1}},{name:1,_id:0})
+
+show all databases in the current database:
+
+show collections  
+
+Drop a Collection(table) in the current db:
+
+db.products.drop()
+
+Drop current Database:
+
+db.dropDatabase()
+
+
+
+
+
+Modelling Relationships in Mongo in One Collection (One to many):
+
+db.products.insertOne({
+	_id: 3,
+	name: "Rubber",
+	price: 1.3,
+	stock: 43,
+	reviews: [{
+			authorName: "Sally",
+			rating: 5,
+			review: "Best Rubber Ever!"
+		},
+		{
+			authorName: "John",
+			rating: 4.5,
+			review: "Amazing rubber Rubber Ever!"
+		},
+	]
+})
+Modelling Relationships across multiple Collections:
+
+"products" collections
+
+{
+	_id: 3,
+	name: "Rubber",
+	price: 1.3,
+    stock: 43
+},
+{
+	_id: 2,
+	name: "Pencil",
+	price: 0.78,
+	stock: 12
+}
+We can have "order" collection with the orderNumber and the corresponding id(s) of the products ordered.
+
+{
+    orderNumber: 3243,
+    productsOrdered:[1,2]
+}
+
+
+
+Using MongoDB from Node.js App
+
+Native Driver: Used older version(3.6) to implement the functionality.
+
+Code available at
+
+Section 26 MongoDB\FruitsProject
+
+Mongoose: ODM(Object Document Mapper) [Preferred Way]
